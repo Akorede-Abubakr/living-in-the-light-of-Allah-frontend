@@ -2,8 +2,8 @@ import React from 'react';
 
 export const BookCardSkeleton: React.FC = () => {
   return (
-    <div className="flex flex-col bg-white rounded-lg border border-stone-200/70 p-4 animate-pulse">
-      <div className="h-44 sm:h-48 bg-stone-200 dark:bg-white/10 rounded-md mb-3 w-full" />
+    <div className="flex flex-col bg-white dark:bg-[#071A17] rounded-[20px] border border-stone-200/70 dark:border-white/10 p-3 animate-pulse">
+      <div className="h-56 sm:h-64 bg-stone-200 dark:bg-white/10 rounded-xl mb-5 w-full" />
       <div className="h-4 bg-stone-200 rounded w-3/4 mb-2" />
       <div className="h-3 bg-stone-200 rounded w-1/2 mb-3" />
       <div className="h-3 bg-stone-200 rounded w-full mb-4" />

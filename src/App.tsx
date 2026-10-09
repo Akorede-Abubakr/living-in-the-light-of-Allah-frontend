@@ -68,7 +68,7 @@ const AppLayout: React.FC = () => {
   const isReaderView = location.pathname.startsWith('/read/');
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-[#202522] dark:bg-[#071A17] dark:text-[#F8F5ED] transition-colors duration-200">
+    <div className="reader-app min-h-screen flex flex-col bg-white text-[#202522] dark:bg-[#071A17] dark:text-[#F8F5ED] transition-colors duration-200">
       {/* Toast notifications container at top-right below navbar */}
       <ToastContainer />
 

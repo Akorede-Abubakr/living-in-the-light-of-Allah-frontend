@@ -36,25 +36,26 @@ export const HomePage: React.FC = () => {
   const heroSpotlight = featuredBooks[0] || popularBooks[0];
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="home-page flex-1 flex flex-col">
       <SEO
         title="Living in the light of Allah — Discover Books Worth Reading"
         description="A curated digital bookstore and illuminated reading platform for seekers of timeless wisdom, knowledge, and spiritual growth."
       />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-stone-50/80 via-white to-white dark:from-[#09221D] dark:via-[#071A17] dark:to-[#071A17] pt-12 pb-20 sm:pt-20 sm:pb-28 border-b border-[#DDE8E1] dark:border-white/10 transition-colors">
+      <section className="editorial-hero relative overflow-hidden bg-gradient-to-b from-stone-50/80 via-white to-white dark:from-[#09221D] dark:via-[#071A17] dark:to-[#071A17] pt-12 pb-20 sm:pt-20 sm:pb-28 border-b border-[#DDE8E1] dark:border-white/10 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
             {/* "Living in the light of Allah" div */}
             <div className="w-full lg:w-1/2 space-y-6 text-center lg:text-left">
+              <div className="eyebrow"><span /> A little reading. A deeper connection.</div>
               <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#202522] dark:text-white leading-[1.1] tracking-tight">
                 Living in the <br />
                 <span className="italic font-normal text-[#077432] dark:text-[#34D399]">light of Allah.</span>
               </h1>
 
               <p className="text-base sm:text-lg text-stone-600 dark:text-stone-300 max-w-xl mx-auto lg:mx-0 leading-relaxed font-sans">
-                An editorial sanctuary of timeless wisdom, classical scholarship, and spiritual mastery. Sample chapters freely, acquire lifetime digital volumes, and read anywhere through our refined reader.
+                Timeless wisdom for a thoughtful life. Discover Islamic literature, explore a chapter, and make space for the knowledge that stays with you.
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
@@ -64,7 +65,7 @@ export const HomePage: React.FC = () => {
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </Link>
-                {heroSpotlight && (
+                {(
                   <Link to={`/books`}>
                     <Button variant="outline" size="lg" className="w-full sm:w-auto px-6 py-3.5 text-base bg-white/90 dark:bg-white/10">
                       <BookOpen className="w-4 h-4 mr-2 text-[#077432]" />
@@ -75,31 +76,31 @@ export const HomePage: React.FC = () => {
               </div>
 
               {/* Trust Badges */}
-              <div className="pt-6 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-stone-600 dark:text-stone-300 font-mono">
-                <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-[#077432] text-white flex items-center justify-center shrink-0 shadow-sm">
-                    <Check className="w-3 h-3 stroke-[3]" />
+              <div className="pt-6 flex flex-row items-center justify-center lg:justify-start gap-2.5 sm:gap-4 lg:gap-6 text-[10px] sm:text-xs text-stone-600 dark:text-stone-300 font-mono overflow-x-auto whitespace-nowrap">
+                <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                  <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#077432] text-white flex items-center justify-center shrink-0 shadow-sm">
+                    <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3 stroke-[3]" />
                   </span>
                   <span>Free Chapter Previews</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-[#077432] text-white flex items-center justify-center shrink-0 shadow-sm">
-                    <Check className="w-3 h-3 stroke-[3]" />
+                <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                  <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#077432] text-white flex items-center justify-center shrink-0 shadow-sm">
+                    <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3 stroke-[3]" />
                   </span>
                   <span>Lifetime Cloud Sync</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-full bg-[#077432] text-white flex items-center justify-center shrink-0 shadow-sm">
-                    <Check className="w-3 h-3 stroke-[3]" />
+                <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                  <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#077432] text-white flex items-center justify-center shrink-0 shadow-sm">
+                    <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3 stroke-[3]" />
                   </span>
                   <span>Distraction-Free Reader</span>
                 </div>
               </div>
             </div>
 
-            {/* Right Image Div */}
-            <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
-              <div className="w-full max-w-lg rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl bg-white dark:bg-[#0A2621] transition-all duration-300 group">
+            {/* Right Image Div (hidden on mobile, displayed on desktop) */}
+            <div className="hero-art flex w-full lg:w-1/2 justify-center lg:justify-end">
+              <div className="hero-frame w-full max-w-lg overflow-hidden bg-white dark:bg-[#0A2621] transition-all duration-300 group">
                 <img
                   src="/images/editors-choice.png"
                   alt="Living in the light of Allah"
@@ -111,13 +112,13 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Featured Books Section */}
+      {/* Thoughtfully selected Section */}
       <section className="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 pb-4 border-b border-[#DDE8E1] dark:border-white/10">
           <div>
 
             <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#202522] dark:text-white mt-1">
-              Featured Books
+              Thoughtfully selected
             </h2>
           </div>
           <Link
@@ -138,10 +139,10 @@ export const HomePage: React.FC = () => {
           <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
 
             <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#202522] dark:text-white">
-              Explore by Intellectual & Sacred Field
+              Follow your curiosity
             </h2>
             <p className="text-sm text-stone-600 dark:text-stone-300">
-              Every book on our platform is classified within rigorous, thoughtful domains of sacred knowledge.
+              Find your next read across the many paths of Islamic knowledge.
             </p>
           </div>
 
@@ -153,9 +154,6 @@ export const HomePage: React.FC = () => {
                 className="group p-5 bg-white dark:bg-[#071A17] rounded-xl border border-[#DDE8E1] dark:border-white/10 hover:border-[#077432]/50 dark:hover:border-[#34D399]/50 hover:shadow-md transition-all duration-200 flex flex-col justify-between"
               >
                 <div className="space-y-2">
-                  <div className="w-10 h-10 rounded-lg bg-stone-100 dark:bg-white/5 group-hover:bg-[#077432]/10 dark:group-hover:bg-[#34D399]/10 text-[#077432] dark:text-[#34D399] flex items-center justify-center transition-colors">
-                    <Compass className="w-5 h-5" />
-                  </div>
                   <h4 className="font-serif font-bold text-base text-[#202522] dark:text-white group-hover:text-[#077432] dark:group-hover:text-[#34D399] transition-colors">
                     {cat.name}
                   </h4>
@@ -182,7 +180,7 @@ export const HomePage: React.FC = () => {
           <div>
             
             <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#202522] dark:text-white mt-1">
-              Popular & High-Rated Reads
+              Reader favorites
             </h2>
           </div>
           <Link
@@ -204,8 +202,8 @@ export const HomePage: React.FC = () => {
             {/* Left Copy */}
             <div className="lg:col-span-6 space-y-6 flex flex-col justify-center">
               <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight text-white">
-                Engineered for <br />
-                <span className="italic text-[#C6A15B]">Deep Contemplation.</span>
+                Make room for <br />
+                <span className="italic text-[#C6A15B]">deeper reading.</span>
               </h2>
               <p className="text-sm sm:text-base text-stone-200 leading-relaxed font-sans">
                 Reading sacred manuscripts requires more than scrolling an endless webpage. Our digital reader breaks volumes into structured chapters and discrete pages, offering paper, sepia, and night modes with instant progress memory.

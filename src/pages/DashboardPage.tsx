@@ -27,6 +27,9 @@ import {
   Heart,
   LogOut,
   AlertTriangle,
+  Pencil,
+  Lock,
+  Unlock,
 } from 'lucide-react';
 import { libraryApi, ordersApi, progressApi, bookmarksApi, authApi } from '../api';
 import { useAuth } from '../context/AuthContext';
@@ -89,6 +92,7 @@ export const DashboardPage: React.FC = () => {
     preferredReadingMode: user?.preferredReadingMode || 'classic',
   });
   const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
 
   // Sync profile form when user updates
   useEffect(() => {
@@ -115,6 +119,7 @@ export const DashboardPage: React.FC = () => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [isSavingPassword, setIsSavingPassword] = useState(false);
+  const [isEditingPassword, setIsEditingPassword] = useState(false);
 
   // Delete Account Confirmation State
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -152,6 +157,7 @@ export const DashboardPage: React.FC = () => {
       if (res.data.success && res.data.user) {
         updateUser(res.data.user);
         showSuccessToast('Profile details updated successfully.');
+        setIsEditingProfile(false);
       }
     } catch (err: any) {
       const msg = err.response?.data?.message || 'Failed to update profile.';
@@ -185,6 +191,7 @@ export const DashboardPage: React.FC = () => {
       });
       showSuccessToast('Password changed successfully.');
       setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      setIsEditingPassword(false);
     } catch (err: any) {
       const msg = err.response?.data?.message || 'Failed to update password.';
       showErrorToast(msg);
@@ -269,11 +276,10 @@ export const DashboardPage: React.FC = () => {
             <button
               onClick={() => setTab('profile')}
               type="button"
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-sans font-semibold transition-all cursor-pointer ${
-                activeTab === 'profile'
+              className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-sans font-semibold transition-all cursor-pointer ${activeTab === 'profile'
                   ? 'bg-[#077432] text-white shadow-sm'
                   : 'text-stone-700 dark:text-stone-300 hover:bg-[#077432]/10 hover:text-[#077432] dark:hover:text-[#34D399]'
-              }`}
+                }`}
             >
               <div className="flex items-center gap-3">
                 <User className={`w-4 h-4 ${activeTab === 'profile' ? 'text-white' : 'text-[#077432]'}`} />
@@ -285,22 +291,20 @@ export const DashboardPage: React.FC = () => {
             <button
               onClick={() => setTab('library')}
               type="button"
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-sans font-semibold transition-all cursor-pointer ${
-                activeTab === 'library'
+              className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-sans font-semibold transition-all cursor-pointer ${activeTab === 'library'
                   ? 'bg-[#077432] text-white shadow-sm'
                   : 'text-stone-700 dark:text-stone-300 hover:bg-[#077432]/10 hover:text-[#077432] dark:hover:text-[#34D399]'
-              }`}
+                }`}
             >
               <div className="flex items-center gap-3">
                 <BookOpen className={`w-4 h-4 ${activeTab === 'library' ? 'text-white' : 'text-[#077432]'}`} />
                 <span>Sacred Library</span>
               </div>
               <span
-                className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded-full ${
-                  activeTab === 'library'
+                className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded-full ${activeTab === 'library'
                     ? 'bg-white/20 text-white'
                     : 'bg-stone-100 dark:bg-white/10 text-stone-600 dark:text-stone-400'
-                }`}
+                  }`}
               >
                 {library.length}
               </span>
@@ -310,22 +314,20 @@ export const DashboardPage: React.FC = () => {
             <button
               onClick={() => setTab('bookmarks')}
               type="button"
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-sans font-semibold transition-all cursor-pointer ${
-                activeTab === 'bookmarks'
+              className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-sans font-semibold transition-all cursor-pointer ${activeTab === 'bookmarks'
                   ? 'bg-[#077432] text-white shadow-sm'
                   : 'text-stone-700 dark:text-stone-300 hover:bg-[#077432]/10 hover:text-[#077432] dark:hover:text-[#34D399]'
-              }`}
+                }`}
             >
               <div className="flex items-center gap-3">
                 <Bookmark className={`w-4 h-4 ${activeTab === 'bookmarks' ? 'text-white' : 'text-[#077432]'}`} />
                 <span>Bookmarks & Notes</span>
               </div>
               <span
-                className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded-full ${
-                  activeTab === 'bookmarks'
+                className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded-full ${activeTab === 'bookmarks'
                     ? 'bg-white/20 text-white'
                     : 'bg-stone-100 dark:bg-white/10 text-stone-600 dark:text-stone-400'
-                }`}
+                  }`}
               >
                 {bookmarks.length}
               </span>
@@ -335,22 +337,20 @@ export const DashboardPage: React.FC = () => {
             <button
               onClick={() => setTab('orders')}
               type="button"
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-sans font-semibold transition-all cursor-pointer ${
-                activeTab === 'orders'
+              className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-sans font-semibold transition-all cursor-pointer ${activeTab === 'orders'
                   ? 'bg-[#077432] text-white shadow-sm'
                   : 'text-stone-700 dark:text-stone-300 hover:bg-[#077432]/10 hover:text-[#077432] dark:hover:text-[#34D399]'
-              }`}
+                }`}
             >
               <div className="flex items-center gap-3">
                 <Receipt className={`w-4 h-4 ${activeTab === 'orders' ? 'text-white' : 'text-[#077432]'}`} />
                 <span>Order Invoices</span>
               </div>
               <span
-                className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded-full ${
-                  activeTab === 'orders'
+                className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded-full ${activeTab === 'orders'
                     ? 'bg-white/20 text-white'
                     : 'bg-stone-100 dark:bg-white/10 text-stone-600 dark:text-stone-400'
-                }`}
+                  }`}
               >
                 {orders.length}
               </span>
@@ -360,11 +360,10 @@ export const DashboardPage: React.FC = () => {
             <button
               onClick={() => setTab('settings')}
               type="button"
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-sans font-semibold transition-all cursor-pointer ${
-                activeTab === 'settings'
+              className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-sans font-semibold transition-all cursor-pointer ${activeTab === 'settings'
                   ? 'bg-[#077432] text-white shadow-sm'
                   : 'text-stone-700 dark:text-stone-300 hover:bg-[#077432]/10 hover:text-[#077432] dark:hover:text-[#34D399]'
-              }`}
+                }`}
             >
               <div className="flex items-center gap-3">
                 <Settings className={`w-4 h-4 ${activeTab === 'settings' ? 'text-white' : 'text-[#077432]'}`} />
@@ -480,10 +479,10 @@ export const DashboardPage: React.FC = () => {
                       <span className="font-semibold text-stone-900 dark:text-white font-mono">
                         {user?.createdAt
                           ? new Date(user.createdAt).toLocaleDateString(undefined, {
-                              year: 'numeric',
-                              month: 'long',
-                              day: 'numeric',
-                            })
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                          })
                           : 'Active Member'}
                       </span>
                     </div>
@@ -868,14 +867,34 @@ export const DashboardPage: React.FC = () => {
 
               {/* 1. Edit Profile Form */}
               <div className="bg-white dark:bg-[#071A17] rounded-3xl border border-[#DDE8E1] dark:border-white/10 p-6 sm:p-8 shadow-sm space-y-6">
-                <div className="border-b border-stone-100 dark:border-white/10 pb-4">
-                  <h3 className="font-serif font-bold text-lg text-[#202522] dark:text-white flex items-center gap-2">
-                    <User className="w-5 h-5 text-[#077432]" />
-                    <span>Personal & Contact Information</span>
-                  </h3>
-                  <p className="text-xs text-stone-500 dark:text-stone-400">
-                    Keep your profile information accurate for personalized notifications and community insights.
-                  </p>
+                <div className="border-b border-stone-100 dark:border-white/10 pb-4 flex items-center justify-between gap-4">
+                  <div>
+                    <h3 className="font-serif font-bold text-lg text-[#202522] dark:text-white flex items-center gap-2">
+                      <User className="w-5 h-5 text-[#077432]" />
+                      <span>Personal & Contact Information</span>
+                    </h3>
+                    <p className="text-xs text-stone-500 dark:text-stone-400">
+                      {isEditingProfile
+                        ? 'Fields unlocked for editing. Update your details below.'
+                        : 'Input fields are locked. Click the pencil icon to edit your information.'}
+                    </p>
+                  </div>
+
+                  {/* Top Right Pencil Action Button */}
+                  <button
+                    type="button"
+                    onClick={() => setIsEditingProfile(!isEditingProfile)}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-sans font-bold flex items-center gap-2 transition-all cursor-pointer shadow-xs border ${
+                      isEditingProfile
+                        ? 'bg-[#077432] text-white border-[#077432] shadow-sm'
+                        : 'bg-stone-50 hover:bg-stone-100 dark:bg-white/5 dark:hover:bg-white/10 text-stone-700 dark:text-stone-200 border-stone-200 dark:border-white/10'
+                    }`}
+                    title={isEditingProfile ? 'Lock inputs' : 'Unlock and edit inputs'}
+                    aria-label="Toggle profile editing"
+                  >
+                    <Pencil className={`w-3.5 h-3.5 ${isEditingProfile ? 'text-white' : 'text-[#077432] dark:text-[#34D399]'}`} />
+                    <span>{isEditingProfile ? 'Editing' : 'Edit'}</span>
+                  </button>
                 </div>
 
                 <form onSubmit={handleProfileSubmit} className="space-y-5">
@@ -890,7 +909,12 @@ export const DashboardPage: React.FC = () => {
                         value={profileForm.firstName}
                         onChange={(e) => setProfileForm({ ...profileForm, firstName: e.target.value })}
                         required
-                        className="w-full px-4 py-2.5 text-xs bg-stone-50 dark:bg-white/5 border border-[#DDE8E1] dark:border-white/10 rounded-xl text-[#202522] dark:text-white focus:outline-none focus:border-[#077432] focus:ring-1 focus:ring-[#077432]"
+                        disabled={!isEditingProfile}
+                        className={`w-full px-4 py-2.5 text-xs rounded-xl border transition-all ${
+                          !isEditingProfile
+                            ? 'bg-stone-100/60 dark:bg-white/[0.03] border-stone-200/80 dark:border-white/10 text-stone-600 dark:text-stone-300 cursor-not-allowed select-none'
+                            : 'bg-stone-50 dark:bg-white/5 border-[#077432]/40 dark:border-[#077432]/60 text-[#202522] dark:text-white focus:outline-none focus:border-[#077432] focus:ring-1 focus:ring-[#077432]'
+                        }`}
                         placeholder="e.g. Ahmad"
                       />
                     </div>
@@ -904,7 +928,12 @@ export const DashboardPage: React.FC = () => {
                         type="text"
                         value={profileForm.lastName}
                         onChange={(e) => setProfileForm({ ...profileForm, lastName: e.target.value })}
-                        className="w-full px-4 py-2.5 text-xs bg-stone-50 dark:bg-white/5 border border-[#DDE8E1] dark:border-white/10 rounded-xl text-[#202522] dark:text-white focus:outline-none focus:border-[#077432] focus:ring-1 focus:ring-[#077432]"
+                        disabled={!isEditingProfile}
+                        className={`w-full px-4 py-2.5 text-xs rounded-xl border transition-all ${
+                          !isEditingProfile
+                            ? 'bg-stone-100/60 dark:bg-white/[0.03] border-stone-200/80 dark:border-white/10 text-stone-600 dark:text-stone-300 cursor-not-allowed select-none'
+                            : 'bg-stone-50 dark:bg-white/5 border-[#077432]/40 dark:border-[#077432]/60 text-[#202522] dark:text-white focus:outline-none focus:border-[#077432] focus:ring-1 focus:ring-[#077432]'
+                        }`}
                         placeholder="e.g. Al-Mansoor"
                       />
                     </div>
@@ -921,7 +950,12 @@ export const DashboardPage: React.FC = () => {
                         type="tel"
                         value={profileForm.phoneNumber}
                         onChange={(e) => setProfileForm({ ...profileForm, phoneNumber: e.target.value })}
-                        className="w-full px-4 py-2.5 text-xs bg-stone-50 dark:bg-white/5 border border-[#DDE8E1] dark:border-white/10 rounded-xl text-[#202522] dark:text-white focus:outline-none focus:border-[#077432] focus:ring-1 focus:ring-[#077432]"
+                        disabled={!isEditingProfile}
+                        className={`w-full px-4 py-2.5 text-xs rounded-xl border transition-all ${
+                          !isEditingProfile
+                            ? 'bg-stone-100/60 dark:bg-white/[0.03] border-stone-200/80 dark:border-white/10 text-stone-600 dark:text-stone-300 cursor-not-allowed select-none'
+                            : 'bg-stone-50 dark:bg-white/5 border-[#077432]/40 dark:border-[#077432]/60 text-[#202522] dark:text-white focus:outline-none focus:border-[#077432] focus:ring-1 focus:ring-[#077432]'
+                        }`}
                         placeholder="e.g. +1 234 567 8900"
                       />
                     </div>
@@ -935,15 +969,20 @@ export const DashboardPage: React.FC = () => {
                       <select
                         value={profileForm.spiritualFocus}
                         onChange={(e) => setProfileForm({ ...profileForm, spiritualFocus: e.target.value })}
-                        className="w-full px-4 py-2.5 text-xs bg-stone-50 dark:bg-white/5 border border-[#DDE8E1] dark:border-white/10 rounded-xl text-[#202522] dark:text-white focus:outline-none focus:border-[#077432] focus:ring-1 focus:ring-[#077432]"
+                        disabled={!isEditingProfile}
+                        className={`w-full px-4 py-2.5 text-xs rounded-xl border transition-all ${
+                          !isEditingProfile
+                            ? 'bg-stone-100/60 dark:bg-white/[0.03] border-stone-200/80 dark:border-white/10 text-stone-600 dark:text-stone-300 cursor-not-allowed select-none'
+                            : 'bg-stone-50 dark:bg-white/5 border-[#077432]/40 dark:border-[#077432]/60 text-[#202522] dark:text-white focus:outline-none focus:border-[#077432] focus:ring-1 focus:ring-[#077432]'
+                        }`}
                       >
-                        <option value="">Select an area of interest</option>
-                        <option value="Quranic Reflection & Tafsir">Quranic Reflection & Tafsir</option>
-                        <option value="Hadith Sciences & Prophetic Sunnah">Hadith Sciences & Prophetic Sunnah</option>
-                        <option value="Islamic Jurisprudence (Fiqh)">Islamic Jurisprudence (Fiqh)</option>
-                        <option value="Purification of Soul (Tazkiyah)">Purification of Soul (Tazkiyah)</option>
-                        <option value="Islamic History & Civilizations">Islamic History & Civilizations</option>
-                        <option value="General Islamic Wisdom & Morals">General Islamic Wisdom & Morals</option>
+                        <option value="" className="text-black bg-white">Select an area of interest</option>
+                        <option value="Quranic Reflection & Tafsir" className="text-black bg-white">Quranic Reflection & Tafsir</option>
+                        <option value="Hadith Sciences & Prophetic Sunnah" className="text-black bg-white">Hadith Sciences & Prophetic Sunnah</option>
+                        <option value="Islamic Jurisprudence (Fiqh)" className="text-black bg-white">Islamic Jurisprudence (Fiqh)</option>
+                        <option value="Purification of Soul (Tazkiyah)" className="text-black bg-white">Purification of Soul (Tazkiyah)</option>
+                        <option value="Islamic History & Civilizations" className="text-black bg-white">Islamic History & Civilizations</option>
+                        <option value="General Islamic Wisdom & Morals" className="text-black bg-white">General Islamic Wisdom & Morals</option>
                       </select>
                     </div>
                   </div>
@@ -958,7 +997,12 @@ export const DashboardPage: React.FC = () => {
                         type="text"
                         value={profileForm.city}
                         onChange={(e) => setProfileForm({ ...profileForm, city: e.target.value })}
-                        className="w-full px-4 py-2.5 text-xs bg-stone-50 dark:bg-white/5 border border-[#DDE8E1] dark:border-white/10 rounded-xl text-[#202522] dark:text-white focus:outline-none focus:border-[#077432] focus:ring-1 focus:ring-[#077432]"
+                        disabled={!isEditingProfile}
+                        className={`w-full px-4 py-2.5 text-xs rounded-xl border transition-all ${
+                          !isEditingProfile
+                            ? 'bg-stone-100/60 dark:bg-white/[0.03] border-stone-200/80 dark:border-white/10 text-stone-600 dark:text-stone-300 cursor-not-allowed select-none'
+                            : 'bg-stone-50 dark:bg-white/5 border-[#077432]/40 dark:border-[#077432]/60 text-[#202522] dark:text-white focus:outline-none focus:border-[#077432] focus:ring-1 focus:ring-[#077432]'
+                        }`}
                         placeholder="e.g. Medina, London, Dallas"
                       />
                     </div>
@@ -972,7 +1016,12 @@ export const DashboardPage: React.FC = () => {
                         type="text"
                         value={profileForm.country}
                         onChange={(e) => setProfileForm({ ...profileForm, country: e.target.value })}
-                        className="w-full px-4 py-2.5 text-xs bg-stone-50 dark:bg-white/5 border border-[#DDE8E1] dark:border-white/10 rounded-xl text-[#202522] dark:text-white focus:outline-none focus:border-[#077432] focus:ring-1 focus:ring-[#077432]"
+                        disabled={!isEditingProfile}
+                        className={`w-full px-4 py-2.5 text-xs rounded-xl border transition-all ${
+                          !isEditingProfile
+                            ? 'bg-stone-100/60 dark:bg-white/[0.03] border-stone-200/80 dark:border-white/10 text-stone-600 dark:text-stone-300 cursor-not-allowed select-none'
+                            : 'bg-stone-50 dark:bg-white/5 border-[#077432]/40 dark:border-[#077432]/60 text-[#202522] dark:text-white focus:outline-none focus:border-[#077432] focus:ring-1 focus:ring-[#077432]'
+                        }`}
                         placeholder="e.g. United Kingdom"
                       />
                     </div>
@@ -987,34 +1036,82 @@ export const DashboardPage: React.FC = () => {
                       rows={3}
                       value={profileForm.bio}
                       onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
-                      className="w-full px-4 py-2.5 text-xs bg-stone-50 dark:bg-white/5 border border-[#DDE8E1] dark:border-white/10 rounded-xl text-[#202522] dark:text-white focus:outline-none focus:border-[#077432] focus:ring-1 focus:ring-[#077432]"
+                      disabled={!isEditingProfile}
+                      className={`w-full px-4 py-2.5 text-xs rounded-xl border transition-all ${
+                        !isEditingProfile
+                          ? 'bg-stone-100/60 dark:bg-white/[0.03] border-stone-200/80 dark:border-white/10 text-stone-600 dark:text-stone-300 cursor-not-allowed select-none'
+                          : 'bg-stone-50 dark:bg-white/5 border-[#077432]/40 dark:border-[#077432]/60 text-[#202522] dark:text-white focus:outline-none focus:border-[#077432] focus:ring-1 focus:ring-[#077432]'
+                      }`}
                       placeholder="Share your goals or love for Islamic literature..."
                     />
                   </div>
 
-                  <div className="flex justify-end pt-2">
-                    <button
-                      type="submit"
-                      disabled={isSavingProfile}
-                      className="px-6 py-2.5 bg-[#077432] hover:bg-[#065F29] text-white text-xs font-bold rounded-xl shadow-sm transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
-                    >
-                      <Save className="w-4 h-4" />
-                      <span>{isSavingProfile ? 'Saving Changes...' : 'Save Profile Changes'}</span>
-                    </button>
-                  </div>
+                  {isEditingProfile && (
+                    <div className="flex items-center justify-end gap-3 pt-2 animate-fadeIn">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (user) {
+                            setProfileForm({
+                              firstName: user.firstName || (user.name ? user.name.split(' ')[0] : ''),
+                              lastName: user.lastName || (user.name ? user.name.split(' ').slice(1).join(' ') : ''),
+                              phoneNumber: user.phoneNumber || '',
+                              bio: user.bio || '',
+                              spiritualFocus: user.spiritualFocus || '',
+                              city: user.city || '',
+                              country: user.country || '',
+                              preferredReadingMode: user.preferredReadingMode || 'classic',
+                            });
+                          }
+                          setIsEditingProfile(false);
+                        }}
+                        className="px-4 py-2.5 border border-stone-200 dark:border-white/10 text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-white/5 text-xs font-bold rounded-xl transition-all cursor-pointer"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={isSavingProfile}
+                        className="px-6 py-2.5 bg-[#077432] hover:bg-[#065F29] text-white text-xs font-bold rounded-xl shadow-sm transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                      >
+                        <Save className="w-4 h-4" />
+                        <span>{isSavingProfile ? 'Saving Changes...' : 'Save Profile Changes'}</span>
+                      </button>
+                    </div>
+                  )}
                 </form>
               </div>
 
               {/* 2. Security: Change Password */}
               <div className="bg-white dark:bg-[#071A17] rounded-3xl border border-[#DDE8E1] dark:border-white/10 p-6 sm:p-8 shadow-sm space-y-6">
-                <div className="border-b border-stone-100 dark:border-white/10 pb-4">
-                  <h3 className="font-serif font-bold text-lg text-[#202522] dark:text-white flex items-center gap-2">
-                    <Key className="w-5 h-5 text-[#077432]" />
-                    <span>Security & Password</span>
-                  </h3>
-                  <p className="text-xs text-stone-500 dark:text-stone-400">
-                    Ensure your account credentials are kept secure and up to date.
-                  </p>
+                <div className="border-b border-stone-100 dark:border-white/10 pb-4 flex items-center justify-between gap-4">
+                  <div>
+                    <h3 className="font-serif font-bold text-lg text-[#202522] dark:text-white flex items-center gap-2">
+                      <Key className="w-5 h-5 text-[#077432]" />
+                      <span>Security & Password</span>
+                    </h3>
+                    <p className="text-xs text-stone-500 dark:text-stone-400">
+                      {isEditingPassword
+                        ? 'Password fields unlocked. Enter your current and new credentials.'
+                        : 'Password fields are locked. Click the pencil icon to change your password.'}
+                    </p>
+                  </div>
+
+                  {/* Top Right Pencil Action Button */}
+                  <button
+                    type="button"
+                    onClick={() => setIsEditingPassword(!isEditingPassword)}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-sans font-bold flex items-center gap-2 transition-all cursor-pointer shadow-xs border ${
+                      isEditingPassword
+                        ? 'bg-[#077432] text-white border-[#077432] shadow-sm'
+                        : 'bg-stone-50 hover:bg-stone-100 dark:bg-white/5 dark:hover:bg-white/10 text-stone-700 dark:text-stone-200 border-stone-200 dark:border-white/10'
+                    }`}
+                    title={isEditingPassword ? 'Lock password fields' : 'Unlock and change password'}
+                    aria-label="Toggle password editing"
+                  >
+                    <Pencil className={`w-3.5 h-3.5 ${isEditingPassword ? 'text-white' : 'text-[#077432] dark:text-[#34D399]'}`} />
+                    <span>{isEditingPassword ? 'Editing' : 'Edit'}</span>
+                  </button>
                 </div>
 
                 <form onSubmit={handlePasswordSubmit} className="space-y-4 max-w-xl">
@@ -1029,13 +1126,23 @@ export const DashboardPage: React.FC = () => {
                         value={passwordForm.currentPassword}
                         onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
                         required
-                        className="w-full pl-4 pr-10 py-2.5 text-xs bg-stone-50 dark:bg-white/5 border border-[#DDE8E1] dark:border-white/10 rounded-xl text-[#202522] dark:text-white focus:outline-none focus:border-[#077432]"
+                        disabled={!isEditingPassword}
+                        className={`w-full pl-4 pr-10 py-2.5 text-xs rounded-xl border transition-all ${
+                          !isEditingPassword
+                            ? 'bg-stone-100/60 dark:bg-white/[0.03] border-stone-200/80 dark:border-white/10 text-stone-600 dark:text-stone-300 cursor-not-allowed select-none'
+                            : 'bg-stone-50 dark:bg-white/5 border-[#077432]/40 dark:border-[#077432]/60 text-[#202522] dark:text-white focus:outline-none focus:border-[#077432] focus:ring-1 focus:ring-[#077432]'
+                        }`}
                         placeholder="••••••••"
                       />
                       <button
                         type="button"
                         onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                        className="absolute right-3 top-2.5 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200"
+                        disabled={!isEditingPassword}
+                        className={`absolute right-3 top-2.5 transition-colors ${
+                          !isEditingPassword
+                            ? 'text-stone-300 dark:text-stone-600 cursor-not-allowed'
+                            : 'text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 cursor-pointer'
+                        }`}
                       >
                         {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -1053,13 +1160,23 @@ export const DashboardPage: React.FC = () => {
                         value={passwordForm.newPassword}
                         onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
                         required
-                        className="w-full pl-4 pr-10 py-2.5 text-xs bg-stone-50 dark:bg-white/5 border border-[#DDE8E1] dark:border-white/10 rounded-xl text-[#202522] dark:text-white focus:outline-none focus:border-[#077432]"
+                        disabled={!isEditingPassword}
+                        className={`w-full pl-4 pr-10 py-2.5 text-xs rounded-xl border transition-all ${
+                          !isEditingPassword
+                            ? 'bg-stone-100/60 dark:bg-white/[0.03] border-stone-200/80 dark:border-white/10 text-stone-600 dark:text-stone-300 cursor-not-allowed select-none'
+                            : 'bg-stone-50 dark:bg-white/5 border-[#077432]/40 dark:border-[#077432]/60 text-[#202522] dark:text-white focus:outline-none focus:border-[#077432] focus:ring-1 focus:ring-[#077432]'
+                        }`}
                         placeholder="••••••••"
                       />
                       <button
                         type="button"
                         onClick={() => setShowNewPassword(!showNewPassword)}
-                        className="absolute right-3 top-2.5 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200"
+                        disabled={!isEditingPassword}
+                        className={`absolute right-3 top-2.5 transition-colors ${
+                          !isEditingPassword
+                            ? 'text-stone-300 dark:text-stone-600 cursor-not-allowed'
+                            : 'text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 cursor-pointer'
+                        }`}
                       >
                         {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -1076,21 +1193,38 @@ export const DashboardPage: React.FC = () => {
                       value={passwordForm.confirmPassword}
                       onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
                       required
-                      className="w-full px-4 py-2.5 text-xs bg-stone-50 dark:bg-white/5 border border-[#DDE8E1] dark:border-white/10 rounded-xl text-[#202522] dark:text-white focus:outline-none focus:border-[#077432]"
+                      disabled={!isEditingPassword}
+                      className={`w-full px-4 py-2.5 text-xs rounded-xl border transition-all ${
+                        !isEditingPassword
+                          ? 'bg-stone-100/60 dark:bg-white/[0.03] border-stone-200/80 dark:border-white/10 text-stone-600 dark:text-stone-300 cursor-not-allowed select-none'
+                          : 'bg-stone-50 dark:bg-white/5 border-[#077432]/40 dark:border-[#077432]/60 text-[#202522] dark:text-white focus:outline-none focus:border-[#077432] focus:ring-1 focus:ring-[#077432]'
+                      }`}
                       placeholder="••••••••"
                     />
                   </div>
 
-                  <div className="pt-2">
-                    <button
-                      type="submit"
-                      disabled={isSavingPassword}
-                      className="px-6 py-2.5 bg-stone-800 hover:bg-stone-900 dark:bg-stone-700 dark:hover:bg-stone-600 text-white text-xs font-bold rounded-xl shadow-sm transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
-                    >
-                      <Key className="w-4 h-4" />
-                      <span>{isSavingPassword ? 'Updating Password...' : 'Update Password'}</span>
-                    </button>
-                  </div>
+                  {isEditingPassword && (
+                    <div className="flex items-center justify-end gap-3 pt-2 animate-fadeIn">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+                          setIsEditingPassword(false);
+                        }}
+                        className="px-4 py-2.5 border border-stone-200 dark:border-white/10 text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-white/5 text-xs font-bold rounded-xl transition-all cursor-pointer"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={isSavingPassword}
+                        className="px-6 py-2.5 bg-stone-800 hover:bg-stone-900 dark:bg-stone-700 dark:hover:bg-stone-600 text-white text-xs font-bold rounded-xl shadow-sm transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                      >
+                        <Key className="w-4 h-4" />
+                        <span>{isSavingPassword ? 'Updating Password...' : 'Update Password'}</span>
+                      </button>
+                    </div>
+                  )}
                 </form>
               </div>
 
@@ -1098,7 +1232,7 @@ export const DashboardPage: React.FC = () => {
               <div className="bg-rose-50/50 dark:bg-rose-950/20 rounded-3xl border border-rose-200 dark:border-rose-900/40 p-6 sm:p-8 space-y-4">
                 <div className="flex items-center gap-2.5 text-rose-600">
                   <AlertTriangle className="w-5 h-5 shrink-0" />
-                  <h3 className="font-serif font-bold text-lg">Danger Zone: Delete Account</h3>
+                  <h3 className="font-serif font-bold text-lg">Delete Account</h3>
                 </div>
 
                 <p className="text-xs text-rose-700 dark:text-rose-300 leading-relaxed max-w-2xl">

@@ -14,14 +14,14 @@ export const BookCard: React.FC<BookCardProps> = ({ book, variant = 'standard', 
   return (
     <Link
       to={`/books/${book._id}`}
-      className="group flex flex-col bg-white dark:bg-[#071A17] rounded-xl border border-[#DDE8E1] dark:border-white/10 hover:border-[#077432]/50 dark:hover:border-[#34D399]/50 p-4 transition-all duration-300 hover:shadow-lg dark:hover:shadow-black/40 hover:-translate-y-1"
+      className="catalog-card group flex flex-col bg-white dark:bg-[#071A17] rounded-xl border border-[#DDE8E1] dark:border-white/10 hover:border-[#077432]/50 dark:hover:border-[#34D399]/50 p-4 transition-all duration-300 hover:shadow-lg dark:hover:shadow-black/40 hover:-translate-y-1"
     >
       {/* Book Cover Container */}
-      <div className="relative h-44 sm:h-48 w-full rounded-lg overflow-hidden bg-stone-100 dark:bg-white/5 mb-3 book-spine-shadow shadow-book group-hover:shadow-book-lg transition-shadow">
+      <div className="relative h-56 sm:h-64 w-full rounded-lg overflow-hidden bg-stone-100 dark:bg-white/5 mb-5 transition-shadow">
         <img
           src={book.coverImage}
           alt={book.title}
-          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+          className="w-full h-full object-contain object-center p-5 group-hover:scale-105 transition-transform duration-500"
           loading="lazy"
         />
 
@@ -51,7 +51,7 @@ export const BookCard: React.FC<BookCardProps> = ({ book, variant = 'standard', 
             </div>
           </div>
 
-          <h3 className="font-serif font-bold text-base text-[#202522] dark:text-white group-hover:text-[#077432] dark:group-hover:text-[#34D399] transition-colors line-clamp-2 leading-snug">
+          <h3 className="font-serif font-semibold text-lg text-[#202522] dark:text-white group-hover:text-[#077432] dark:group-hover:text-[#34D399] transition-colors line-clamp-2 leading-snug">
             {book.title}
           </h3>
 

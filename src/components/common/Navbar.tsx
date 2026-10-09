@@ -64,6 +64,7 @@ export const Navbar: React.FC = () => {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/books?search=${encodeURIComponent(searchQuery.trim())}`);
+      setIsMobileMenuOpen(false);
       setIsSearchOpen(false);
       setSearchQuery('');
     }
@@ -74,7 +75,7 @@ export const Navbar: React.FC = () => {
   const navLinks = [
     { name: 'Home', path: homePath },
     { name: 'Bookstore', path: '/books' },
-    { name: 'My blog', path: '/blog' },
+    { name: 'Journal', path: '/blog' },
     { name: 'About', path: '/about' },
   ];
 
@@ -91,7 +92,7 @@ export const Navbar: React.FC = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-white/95 dark:bg-[#071A17]/95 backdrop-blur-md border-b border-[#DDE8E1] dark:border-white/10 transition-colors">
+      <header className="site-header sticky top-0 z-40 bg-white/95 dark:bg-[#071A17]/95 backdrop-blur-md border-b border-[#DDE8E1] dark:border-white/10 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Brand Logo */}
@@ -102,18 +103,19 @@ export const Navbar: React.FC = () => {
                 className="w-10 h-10 object-contain group-hover:scale-105 transition-transform"
               />
               <div className="flex flex-col">
-                <span className="font-serif text-lg sm:text-xl font-bold text-[#202522] dark:text-white tracking-tight group-hover:text-[#077432] dark:group-hover:text-[#A3DAB7] transition-colors leading-none">
+                <span className="font-serif text-sm sm:text-lg font-bold text-[#202522] dark:text-white tracking-tight group-hover:text-[#077432] dark:group-hover:text-[#A3DAB7] transition-colors leading-none">
                   Living in the light of Allah
                 </span>
               </div>
             </Link>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden md:flex items-center gap-2">
+            <nav className="hidden xl:flex items-center gap-2">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
                   to={link.path}
+                  aria-current={isActive(link.path) ? 'page' : undefined}
                   className={`px-4 py-2 rounded-xl text-sm font-sans transition-all duration-200 ${
                     isActive(link.path)
                       ? 'bg-[#077432] text-white font-semibold shadow-sm'
@@ -126,7 +128,7 @@ export const Navbar: React.FC = () => {
             </nav>
 
             {/* Right Action Icons & Auth */}
-            <div className="hidden md:flex items-center gap-3">
+            <div className="hidden xl:flex items-center gap-3">
               {/* Search Bar Trigger */}
               <form onSubmit={handleSearch} className="relative">
                 <input
@@ -134,7 +136,7 @@ export const Navbar: React.FC = () => {
                   placeholder="Search catalog..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 pr-4 py-2 text-xs bg-white dark:bg-white/5 border border-[#DDE8E1] dark:border-white/10 rounded-full text-[#202522] dark:text-white placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:border-[#077432] w-60 focus:w-52 transition-all shadow-sm"
+                  className="pl-9 pr-4 py-2 text-xs bg-white dark:bg-white/5 border border-[#DDE8E1] dark:border-white/10 rounded-full text-[#202522] dark:text-white placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:border-[#077432] w-40 focus:w-44 transition-all shadow-sm"
                 />
                 <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3.5 top-2.5 pointer-events-none" />
               </form>
@@ -250,12 +252,25 @@ export const Navbar: React.FC = () => {
               )}
             </div>
 
-            {/* Mobile Menu Button */}
-            <div className="flex md:hidden items-center gap-2">
+            {/* Mobile Actions: Theme Toggle & Menu Button */}
+            <div className="flex xl:hidden items-center gap-1.5">
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="p-2 rounded-full text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-white/10 transition-colors cursor-pointer"
+                title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                aria-label="Toggle Theme"
+              >
+                {theme === 'dark' ? (
+                  <Sun className="w-5 h-5 text-[#C6A15B]" />
+                ) : (
+                  <Moon className="w-5 h-5 text-stone-600" />
+                )}
+              </button>
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="p-2 text-stone-600 dark:text-stone-300 hover:text-[#202522] rounded-lg cursor-pointer"
-                aria-label="Toggle menu"
+                aria-label="Toggle menu" aria-expanded={isMobileMenuOpen} aria-controls="mobile-navigation"
               >
                 {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -265,27 +280,7 @@ export const Navbar: React.FC = () => {
 
         {/* Mobile Drawer Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden bg-white dark:bg-[#071A17] border-b border-[#DDE8E1] dark:border-white/10 px-4 pt-3 pb-6 space-y-4 animate-fadeIn">
-            {/* Theme Row */}
-            <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-stone-50 dark:bg-white/5 border border-stone-200/60 dark:border-white/10 text-xs text-stone-600 dark:text-stone-300 font-medium">
-              <button
-                type="button"
-                onClick={toggleTheme}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-white/10 text-stone-800 dark:text-white border border-stone-200 dark:border-white/10 text-xs font-semibold shadow-xs"
-              >
-                {theme === 'dark' ? (
-                  <>
-                    <Sun className="w-3.5 h-3.5 text-[#C6A15B]" />
-                    <span>Light Mode</span>
-                  </>
-                ) : (
-                  <>
-                    <Moon className="w-3.5 h-3.5 text-stone-600" />
-                    <span>Dark Mode</span>
-                  </>
-                )}
-              </button>
-            </div>
+          <div id="mobile-navigation" className="xl:hidden bg-white dark:bg-[#071A17] border-b border-[#DDE8E1] dark:border-white/10 px-4 pt-3 pb-6 space-y-4 animate-fadeIn">
 
             <form onSubmit={handleSearch} className="relative">
               <input
@@ -303,6 +298,7 @@ export const Navbar: React.FC = () => {
                 <Link
                   key={link.name}
                   to={link.path}
+                  aria-current={isActive(link.path) ? 'page' : undefined}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`px-4 py-2.5 rounded-xl text-sm font-sans transition-all duration-200 ${
                     isActive(link.path)

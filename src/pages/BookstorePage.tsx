@@ -62,19 +62,19 @@ export const BookstorePage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 animate-fadeIn">
+    <div className="bookstore-page w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 animate-fadeIn">
       <SEO
         title="Bookstore Catalog — Living in the light of Allah"
         description="Browse our curated collection of illuminated Islamic literature, philosophy, and spiritual works."
       />
 
       {/* Header Banner */}
-      <div className="text-center max-w-2xl mx-auto space-y-3">
+      <div className="catalog-heading space-y-3">
         <span className="text-xs font-sans uppercase font-bold text-[#077432] dark:text-[#34D399] tracking-widest">
-          Complete Sacred Library
+          The collection
         </span>
         <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#202522] dark:text-white">
-          Explore the Bookstore
+          Your next chapter starts here.
         </h1>
         <p className="text-sm text-stone-600 dark:text-stone-300">
           Discover classical and contemporary illuminated volumes designed for seekers of knowledge.
