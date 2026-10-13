@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Menu, Bookmark, Sliders, Check } from 'lucide-react';
+import { ArrowLeft, Menu, Bookmark, Sliders, Sparkles } from 'lucide-react';
 
 interface ReaderHeaderProps {
   bookTitle: string;
@@ -10,6 +10,7 @@ interface ReaderHeaderProps {
   onToggleBookmark: () => void;
   onOpenSettings: () => void;
   onOpenSidebar: () => void;
+  onOpenAssistant: () => void;
   theme: 'paper' | 'sepia' | 'dark';
 }
 
@@ -21,6 +22,7 @@ export const ReaderHeader: React.FC<ReaderHeaderProps> = ({
   onToggleBookmark,
   onOpenSettings,
   onOpenSidebar,
+  onOpenAssistant,
   theme,
 }) => {
   const isDark = theme === 'dark';
@@ -76,6 +78,9 @@ export const ReaderHeader: React.FC<ReaderHeaderProps> = ({
 
         {/* Right: Bookmark & Reading Settings */}
         <div className="flex items-center gap-1 sm:gap-2">
+          <button onClick={onOpenAssistant} className="flex items-center gap-1.5 rounded-md bg-[#077432] text-white px-2.5 py-2 text-xs shrink-0" title="Open LightBridge AI" aria-label="Open LightBridge AI">
+            <Sparkles className="w-4 h-4" /><span className="hidden sm:inline">LightBridge AI</span>
+          </button>
           {/* Bookmark Toggle */}
           <button
             onClick={onToggleBookmark}
@@ -97,10 +102,10 @@ export const ReaderHeader: React.FC<ReaderHeaderProps> = ({
             className={`flex items-center gap-1.5 p-2 rounded-md text-xs transition-colors ${
               isDark ? 'hover:bg-stone-800 text-stone-300' : 'hover:bg-stone-200/60 text-ink-700'
             }`}
-            title="Reading Settings (Font, Theme, Spacing)"
+            title="Reading Settings (Theme and Page Width)"
           >
             <Sliders className="w-4 h-4" />
-            <span className="hidden md:inline font-mono text-[11px]">Aa</span>
+            <span className="hidden md:inline font-mono text-[11px]">View</span>
           </button>
         </div>
       </div>

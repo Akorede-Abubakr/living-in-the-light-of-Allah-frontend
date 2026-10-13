@@ -15,7 +15,7 @@ export const PriceFilter: React.FC<PriceFilterProps> = ({
     <div className="space-y-2">
       <div className="flex items-center justify-between text-xs font-sans text-stone-600 dark:text-stone-300">
         <span>Max Price:</span>
-        <span className="font-mono font-bold text-[#077432] dark:text-[#34D399]">${priceRange[1]}</span>
+        <span className="font-mono font-bold text-[#077432] dark:text-[#34D399]">{priceRange[1] === maxPrice ? 'Any price' : `$${priceRange[1]}`}</span>
       </div>
       <input
         type="range"

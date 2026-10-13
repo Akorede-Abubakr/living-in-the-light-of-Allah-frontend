@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { ShieldCheck, CheckCircle2, Lock, ArrowRight, CreditCard, Sparkles } from 'lucide-react';
 import { ordersApi } from '../api';
@@ -8,6 +9,7 @@ import { SEO } from '../components/common/SEO';
 export const MockPayPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const ref = searchParams.get('ref') || '';
   const orderId = searchParams.get('orderId') || '';
@@ -29,6 +31,7 @@ export const MockPayPage: React.FC = () => {
     try {
       const res = await ordersApi.verifyOrder(ref);
       if (res.data.success) {
+        await Promise.all(['readerMeta', 'readerPage', 'bookMeta', 'readerAccess', 'library', 'myLibrary'].map(key => queryClient.invalidateQueries({ queryKey: [key] })));
         setIsSuccess(true);
       } else {
         setError(res.data.message || 'Payment verification failed.');
@@ -73,7 +76,7 @@ export const MockPayPage: React.FC = () => {
                   variant="editorial"
                   size="md"
                   className="w-full"
-                  onClick={() => navigate('/dashboard')}
+                  onClick={() => navigate('/library')}
                 >
                   Go to My Library
                   <ArrowRight className="w-4 h-4 ml-1.5" />

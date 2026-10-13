@@ -45,7 +45,7 @@ export const PreviewInterruption: React.FC<PreviewInterruptionProps> = ({
 
         <div className="space-y-2">
           <span className="font-mono text-xs uppercase tracking-widest text-brand-600 font-semibold">
-            End of Free Sample • Pages 1–{previewLimit}
+            End of Free Sample
           </span>
           <h3 className="font-serif text-2xl sm:text-3xl font-bold leading-tight">
             You've reached the end of the free preview.
@@ -78,7 +78,7 @@ export const PreviewInterruption: React.FC<PreviewInterruptionProps> = ({
                 ${price.toFixed(2)}
               </span>
               <span className="text-[10px] font-mono opacity-70">
-                • {totalPages - previewLimit} more pages to explore
+                Complete book access
               </span>
             </div>
           </div>
@@ -117,7 +117,7 @@ export const PreviewInterruption: React.FC<PreviewInterruptionProps> = ({
             className="inline-flex items-center gap-1 text-xs opacity-75 hover:opacity-100 transition-opacity underline underline-offset-4"
           >
             <ArrowLeft className="w-3 h-3" />
-            <span>Back to Page {previewLimit} (Free Sample)</span>
+            <span>Return to free preview</span>
           </button>
         </div>
       </div>

@@ -265,7 +265,7 @@ export const HomePage: React.FC = () => {
                     </div>
                     <div className="min-w-0">
                       <h4 className="font-serif font-bold text-xs sm:text-sm text-[#202522] dark:text-white truncate">
-                        The Architecture of Purpose
+                        Your digital reading space
                       </h4>
                       <p className="text-[10px] text-[#077432] dark:text-[#C6A15B] font-mono">
                         Chapter II: The Inner Citadel

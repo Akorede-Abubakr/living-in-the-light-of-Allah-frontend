@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { ShoppingBag, Lock, CheckCircle2, ShieldCheck, ArrowRight } from 'lucide-react';
 import { Book } from '../../types';
@@ -22,9 +23,14 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({
 }) => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    setIsSuccess(false);
+    setError(null);
+  }, [book._id, isOpen]);
 
   if (!isOpen) return null;
 
@@ -48,6 +54,9 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({
         const verifyRes = await ordersApi.verifyOrder(reference);
 
         if (verifyRes.data.success) {
+          await Promise.all(['readerMeta', 'readerPage', 'bookMeta', 'readerAccess', 'library', 'myLibrary'].map(key =>
+            queryClient.invalidateQueries({ queryKey: [key] })
+          ));
           setIsSuccess(true);
           if (onPurchaseSuccess) onPurchaseSuccess();
         } else {
@@ -90,7 +99,7 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({
               className="flex-1"
               onClick={() => {
                 onClose();
-                navigate('/dashboard');
+                navigate('/library');
               }}
             >
               Go to My Library

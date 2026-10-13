@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { BookOpen, SlidersHorizontal, ArrowUpDown } from 'lucide-react';
@@ -30,14 +30,14 @@ export const BookstorePage: React.FC = () => {
   const categories = categoriesData?.data.data || [];
 
   // Fetch Books
-  const { data: booksData, isLoading } = useQuery({
+  const { data: booksData, isLoading, isError, refetch } = useQuery({
     queryKey: ['books', selectedCategory, search, sort, priceRange, page],
     queryFn: () =>
       booksApi.getBooks({
         category: selectedCategory !== 'all' ? selectedCategory : undefined,
-        search: search || undefined,
-        sort,
-        maxPrice: priceRange[1],
+        q: search || undefined,
+        sortBy: sort,
+        maxPrice: priceRange[1] < 100 ? priceRange[1] : undefined,
         page,
         limit: 12,
       }),
@@ -45,6 +45,12 @@ export const BookstorePage: React.FC = () => {
 
   const books = booksData?.data.data || [];
   const pagination = booksData?.data.pagination || { page: 1, totalPages: 1, total: 0 };
+  const totalPages = Math.max(1, pagination.totalPages);
+  useEffect(() => {
+    if (booksData && page > totalPages) setPage(totalPages);
+  }, [booksData, page, totalPages]);
+  const firstPage = Math.max(1, Math.min(page - 2, totalPages - 4));
+  const pageNumbers = Array.from({ length: Math.min(5, totalPages) }, (_, i) => firstPage + i);
 
   const handleCategoryChange = (slug: string) => {
     setSelectedCategory(slug);
@@ -90,9 +96,9 @@ export const BookstorePage: React.FC = () => {
 
           <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
             <div className="w-36 hidden sm:block">
-              <PriceFilter priceRange={priceRange} onChange={setPriceRange} />
+              <PriceFilter priceRange={priceRange} onChange={range => { setPriceRange(range); setPage(1); }} />
             </div>
-            <SortDropdown value={sort} onChange={setSort} />
+            <SortDropdown value={sort} onChange={value => { setSort(value); setPage(1); }} />
           </div>
         </div>
 
@@ -104,29 +110,41 @@ export const BookstorePage: React.FC = () => {
       </div>
 
       {/* Book Grid */}
-      <BookGrid books={books} isLoading={isLoading} />
+      {isError ? (
+        <div role="alert" className="rounded-xl border p-6 text-center">
+          <p>Could not load the bookstore.</p>
+          <button onClick={() => void refetch()} className="mt-3 underline">Retry</button>
+        </div>
+      ) : <BookGrid books={books} isLoading={isLoading} />}
 
       {/* Pagination */}
-      {pagination.totalPages > 1 && (
-        <div className="flex justify-center items-center gap-2 pt-6">
+      {booksData && !isError && (
+        <nav aria-label="Bookstore pages" className="flex flex-wrap justify-center items-center gap-2 pt-6">
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={page === 1}
+            disabled={page === 1 || isLoading}
             className="px-4 py-2 bg-white dark:bg-[#071A17] border border-[#DDE8E1] dark:border-white/10 rounded-lg text-xs font-semibold text-stone-700 dark:text-stone-200 disabled:opacity-40 hover:bg-stone-50 dark:hover:bg-white/5 transition-colors"
           >
             Previous
           </button>
-          <span className="text-xs font-sans text-stone-500 dark:text-stone-400">
-            Page {pagination.page} of {pagination.totalPages}
+          {pageNumbers.map(number => (
+            <button key={number} type="button" aria-label={`Page ${number}`} aria-current={number === page ? 'page' : undefined}
+              onClick={() => setPage(number)} disabled={isLoading}
+              className={`rounded-lg border px-3 py-2 text-xs ${number === page ? 'bg-[#123C35] text-white' : 'bg-white text-[#123C35] dark:bg-[#071A17] dark:text-white'}`}>
+              {number}
+            </button>
+          ))}
+          <span aria-live="polite" className="text-xs font-sans text-stone-500 dark:text-stone-400">
+            {pagination.total} books · Page {page} of {totalPages}
           </span>
           <button
-            onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))}
-            disabled={page === pagination.totalPages}
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page >= totalPages || isLoading}
             className="px-4 py-2 bg-white dark:bg-[#071A17] border border-[#DDE8E1] dark:border-white/10 rounded-lg text-xs font-semibold text-stone-700 dark:text-stone-200 disabled:opacity-40 hover:bg-stone-50 dark:hover:bg-white/5 transition-colors"
           >
             Next
           </button>
-        </div>
+        </nav>
       )}
     </div>
   );

@@ -15,6 +15,7 @@ interface ReaderSettingsModalProps {
   onClose: () => void;
   settings: ReaderSettings;
   onUpdateSettings: (newSettings: Partial<ReaderSettings>) => void;
+  originalLayout?: boolean;
 }
 
 export const ReaderSettingsModal: React.FC<ReaderSettingsModalProps> = ({
@@ -22,6 +23,7 @@ export const ReaderSettingsModal: React.FC<ReaderSettingsModalProps> = ({
   onClose,
   settings,
   onUpdateSettings,
+  originalLayout = false,
 }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Reading Preferences" maxWidth="md">
@@ -70,6 +72,8 @@ export const ReaderSettingsModal: React.FC<ReaderSettingsModalProps> = ({
           </div>
         </div>
 
+        {originalLayout && <p className="text-sm text-stone-600">Original page fonts and spacing are preserved. Change the reading width below to resize the page.</p>}
+        {!originalLayout && <>
         {/* Font Size Selector */}
         <div>
           <label className="block text-xs font-semibold uppercase tracking-wider text-ink-500 mb-2">
@@ -119,6 +123,7 @@ export const ReaderSettingsModal: React.FC<ReaderSettingsModalProps> = ({
           </div>
         </div>
 
+        </>}
         {/* Reading Column Width */}
         <div>
           <label className="block text-xs font-semibold uppercase tracking-wider text-ink-500 mb-2">

@@ -55,9 +55,10 @@ export const ReaderFooter: React.FC<ReaderFooterProps> = ({
         {/* Bottom Bar: Prev / Page Count / Next */}
         <div className="flex items-center justify-between">
           <button
+            aria-label="Previous page"
             onClick={onPrev}
             disabled={!hasPrev}
-            className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed ${
+            className={`flex min-h-11 min-w-11 items-center justify-center gap-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed ${
               isDark ? 'hover:bg-stone-800' : 'hover:bg-stone-200/60'
             }`}
           >
@@ -70,9 +71,10 @@ export const ReaderFooter: React.FC<ReaderFooterProps> = ({
           </span>
 
           <button
+            aria-label="Next page"
             onClick={onNext}
             disabled={!hasNext}
-            className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed ${
+            className={`flex min-h-11 min-w-11 items-center justify-center gap-1 px-3 py-1.5 rounded-md text-xs font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed ${
               isDark ? 'hover:bg-stone-800' : 'hover:bg-stone-200/60'
             }`}
           >

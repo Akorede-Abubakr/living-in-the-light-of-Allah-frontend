@@ -75,6 +75,8 @@ export const Navbar: React.FC = () => {
   const navLinks = [
     { name: 'Home', path: homePath },
     { name: 'Bookstore', path: '/books' },
+    { name: 'Speech to Text', path: '/transcribe' },
+    { name: 'LightBridge AI', path: '/chat' },
     { name: 'Journal', path: '/blog' },
     { name: 'About', path: '/about' },
   ];
@@ -116,7 +118,7 @@ export const Navbar: React.FC = () => {
                   key={link.name}
                   to={link.path}
                   aria-current={isActive(link.path) ? 'page' : undefined}
-                  className={`px-4 py-2 rounded-xl text-sm font-sans transition-all duration-200 ${
+                  className={`px-2 py-2 rounded-xl text-sm font-sans transition-all duration-200 ${
                     isActive(link.path)
                       ? 'bg-[#077432] text-white font-semibold shadow-sm'
                       : 'text-stone-700 dark:text-stone-300 hover:text-[#077432] dark:hover:text-[#A3DAB7] hover:bg-[#077432]/10 font-medium'

@@ -169,6 +169,8 @@ export interface LibraryItem {
 }
 
 export interface ReaderMetaData {
+  originalPagesAvailable?: boolean;
+  documentVersion?: string;
   book: {
     id: string;
     title: string;

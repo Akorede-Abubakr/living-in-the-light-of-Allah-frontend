@@ -12,7 +12,7 @@ import { useAuth } from '../context/AuthContext';
 
 export const BookDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
 
   // 1. Fetch Book Details
@@ -24,7 +24,7 @@ export const BookDetailsPage: React.FC = () => {
 
   // 2. Fetch Reader Metadata & Chapters
   const { data: metaData } = useQuery({
-    queryKey: ['bookMeta', id],
+    queryKey: ['bookMeta', id, user?.id],
     queryFn: () => readerApi.getMeta(id!),
     enabled: !!id,
   });
@@ -38,7 +38,7 @@ export const BookDetailsPage: React.FC = () => {
 
   // 4. Check Access / Reader Info
   const { data: accessData, refetch: refetchAccess } = useQuery({
-    queryKey: ['readerAccess', id],
+    queryKey: ['readerAccess', id, user?.id],
     queryFn: () => libraryApi.checkOwnership(id!),
     enabled: !!id && isAuthenticated,
   });
@@ -46,7 +46,7 @@ export const BookDetailsPage: React.FC = () => {
   const book = bookData?.data.data;
   const chapters = metaData?.data.data?.chapters || (book as any)?.chapters || [];
   const reviews = reviewsData?.data.data?.reviews || [];
-  const hasPurchased = accessData?.data?.isPurchased || false;
+  const hasPurchased = isAuthenticated && (accessData?.data?.isPurchased || metaData?.data.data?.hasFullAccess || false);
 
   if (isLoading || !book) {
     return (
@@ -77,7 +77,7 @@ export const BookDetailsPage: React.FC = () => {
 
       {/* Main Hero Component */}
       <BookHero
-        book={book}
+        book={{ ...book, pageCount: metaData?.data.data?.totalPages ?? book.pageCount }}
         onOpenPurchase={() => setIsPurchaseModalOpen(true)}
         hasPurchased={hasPurchased}
       />

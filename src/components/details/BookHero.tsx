@@ -35,7 +35,12 @@ export const BookHero: React.FC<BookHeroProps> = ({
           </div>
 
           <div className="mt-6 w-full max-w-[280px] space-y-3">
-            {hasPurchased ? (
+            {!book.pageCount ? (
+              <p role="status" className="rounded-lg border border-stone-200 p-3 text-sm text-center">
+                Manuscript pending. Reading and preview will be available after the publisher uploads the document.
+                {hasPurchased && ' Your purchase is saved; you do not need to buy it again.'}
+              </p>
+            ) : hasPurchased ? (
               <Link to={`/read/${book._id}?page=1`} className="block w-full">
                 <Button variant="editorial" size="lg" className="w-full py-3.5 shadow-md">
                   <BookOpen className="w-4 h-4 mr-2" />
@@ -57,7 +62,7 @@ export const BookHero: React.FC<BookHeroProps> = ({
                 <Link to={`/read/${book._id}?page=1`} className="block w-full">
                   <Button variant="outline" size="md" className="w-full py-2.5">
                     <Eye className="w-4 h-4 mr-2" />
-                    Read Free Preview ({book.previewPages || 5} Pages)
+                    Read Free Preview
                   </Button>
                 </Link>
               </>
@@ -100,18 +105,14 @@ export const BookHero: React.FC<BookHeroProps> = ({
           </div>
 
           {/* Specs Pill Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-stone-100 dark:border-white/10 font-sans text-xs">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-4 border-t border-stone-100 dark:border-white/10 font-sans text-xs">
             <div className="p-3 bg-stone-50 dark:bg-white/5 rounded-xl border border-[#DDE8E1] dark:border-white/10">
               <span className="text-stone-500 dark:text-stone-400 text-[11px] block">Total Pages</span>
-              <span className="font-bold text-[#077432] dark:text-[#34D399] text-sm">{book.pageCount || 15} Pages</span>
+              <span className="font-bold text-[#077432] dark:text-[#34D399] text-sm">{book.pageCount ? `${book.pageCount} Pages` : 'Manuscript pending'}</span>
             </div>
             <div className="p-3 bg-stone-50 dark:bg-white/5 rounded-xl border border-[#DDE8E1] dark:border-white/10">
               <span className="text-stone-500 dark:text-stone-400 text-[11px] block">Language</span>
               <span className="font-bold text-[#077432] dark:text-[#34D399] text-sm">{book.language || 'English'}</span>
-            </div>
-            <div className="p-3 bg-stone-50 dark:bg-white/5 rounded-xl border border-[#DDE8E1] dark:border-white/10">
-              <span className="text-stone-500 dark:text-stone-400 text-[11px] block">Free Preview</span>
-              <span className="font-bold text-[#077432] dark:text-[#34D399] text-sm">{book.previewPages || 5} Pages</span>
             </div>
             <div className="p-3 bg-stone-50 dark:bg-white/5 rounded-xl border border-[#DDE8E1] dark:border-white/10">
               <span className="text-stone-500 dark:text-stone-400 text-[11px] block">Format</span>
