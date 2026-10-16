@@ -3,8 +3,6 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   BookOpen,
-  Bookmark,
-  Receipt,
   Search,
   User,
   LogOut,
@@ -83,7 +81,22 @@ export const Navbar: React.FC = () => {
     { name: 'About', path: '/about' },
   ];
 
+  const mobileNavLinks = isAuthenticated
+    ? [
+        { name: 'My Profile', path: '/dashboard?tab=profile' },
+        { name: 'My Sacred Library', path: '/dashboard?tab=library' },
+        { name: 'Bookmarks & Notes', path: '/dashboard?tab=bookmarks' },
+        { name: 'Order Invoices', path: '/dashboard?tab=orders' },
+        { name: 'Settings', path: '/dashboard?tab=settings' },
+        ...navLinks.filter((link) => link.name !== 'Home'),
+      ]
+    : navLinks;
+
   const isActive = (path: string) => {
+    if (path.startsWith('/dashboard?tab=')) {
+      const tab = new URLSearchParams(location.search).get('tab') || 'profile';
+      return location.pathname === '/dashboard' && tab === path.split('tab=')[1];
+    }
     if (path === '/' || path === '/dashboard') {
       return isAuthenticated ? location.pathname === '/dashboard' : location.pathname === '/';
     }
@@ -96,7 +109,7 @@ export const Navbar: React.FC = () => {
 
   return (
     <>
-      <header className="site-header sticky top-0 z-40 bg-white/95 dark:bg-[#071A17]/95 backdrop-blur-md border-b border-[#DDE8E1] dark:border-white/10 transition-colors">
+      <header className="site-header sticky top-0 z-40 relative bg-white/95 dark:bg-[#071A17]/95 backdrop-blur-md border-b border-[#DDE8E1] dark:border-white/10 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Brand Logo */}
@@ -284,7 +297,7 @@ export const Navbar: React.FC = () => {
 
         {/* Mobile Drawer Menu */}
         {isMobileMenuOpen && (
-          <div id="mobile-navigation" className="xl:hidden bg-white dark:bg-[#071A17] border-b border-[#DDE8E1] dark:border-white/10 px-4 pt-3 pb-6 space-y-4 animate-fadeIn">
+          <div id="mobile-navigation" className="absolute top-full left-0 right-0 xl:hidden max-h-[calc(100vh-5rem)] overflow-y-auto bg-white dark:bg-[#071A17] border-b border-[#DDE8E1] dark:border-white/10 px-4 pt-3 pb-6 space-y-4 shadow-xl animate-fadeIn">
 
             <form onSubmit={handleSearch} className="relative">
               <input
@@ -298,7 +311,7 @@ export const Navbar: React.FC = () => {
             </form>
 
             <nav className="flex flex-col space-y-1.5">
-              {navLinks.map((link) => (
+              {mobileNavLinks.map((link) => (
                 <Link
                   key={link.name}
                   to={link.path}
@@ -322,46 +335,6 @@ export const Navbar: React.FC = () => {
                     <span>Signed in as</span>
                     <span className="font-serif font-bold text-[#077432] dark:text-[#34D399]">{userFirstName}</span>
                   </div>
-                  <Link
-                    to="/dashboard?tab=profile"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="px-3 py-2 text-sm font-sans text-stone-700 dark:text-stone-200 flex items-center gap-2 hover:bg-stone-50 dark:hover:bg-white/5 rounded-lg"
-                  >
-                    <User className="w-4 h-4 text-[#077432]" />
-                    <span>My profile</span>
-                  </Link>
-                  <Link
-                    to="/dashboard?tab=library"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="px-3 py-2 text-sm font-sans text-stone-700 dark:text-stone-200 flex items-center gap-2 hover:bg-stone-50 dark:hover:bg-white/5 rounded-lg"
-                  >
-                    <BookOpen className="w-4 h-4 text-[#077432]" />
-                    <span>My Sacred Library</span>
-                  </Link>
-                  <Link
-                    to="/dashboard?tab=bookmarks"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="px-3 py-2 text-sm font-sans text-stone-700 dark:text-stone-200 flex items-center gap-2 hover:bg-stone-50 dark:hover:bg-white/5 rounded-lg"
-                  >
-                    <Bookmark className="w-4 h-4 text-[#077432]" />
-                    <span>Bookmarks &amp; Notes</span>
-                  </Link>
-                  <Link
-                    to="/dashboard?tab=orders"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="px-3 py-2 text-sm font-sans text-stone-700 dark:text-stone-200 flex items-center gap-2 hover:bg-stone-50 dark:hover:bg-white/5 rounded-lg"
-                  >
-                    <Receipt className="w-4 h-4 text-[#077432]" />
-                    <span>Order Invoices</span>
-                  </Link>
-                  <Link
-                    to="/dashboard?tab=settings"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="px-3 py-2 text-sm font-sans text-stone-700 dark:text-stone-200 flex items-center gap-2 hover:bg-stone-50 dark:hover:bg-white/5 rounded-lg"
-                  >
-                    <Settings className="w-4 h-4 text-[#077432]" />
-                    <span>Settings</span>
-                  </Link>
                   <button
                     onClick={() => {
                       setIsMobileMenuOpen(false);
