@@ -1,6 +1,10 @@
 export const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || '/api').replace(/\/$/, '');
-const mediaOrigin = (import.meta.env.VITE_MEDIA_BASE_URL ||
-  (apiBaseUrl.startsWith('https://') || apiBaseUrl.startsWith('http://') ? new URL(apiBaseUrl).origin : '')
+const productionMediaOrigin = 'https://living-in-the-light-of-allah-backend.onrender.com';
+const mediaOrigin = (
+  import.meta.env.VITE_MEDIA_BASE_URL ||
+  (apiBaseUrl.startsWith('https://') || apiBaseUrl.startsWith('http://')
+    ? new URL(apiBaseUrl).origin
+    : import.meta.env.PROD ? productionMediaOrigin : '')
 ).replace(/\/$/, '');
 
 // Existing records store /uploads paths. Resolve them against the independently
