@@ -244,7 +244,7 @@ export const DashboardPage: React.FC = () => {
       {/* Main Grid: Left Sidebar Navigation & Right Content Area */}
       <div className="flex flex-col lg:flex-row gap-8 items-start">
         {/* Left Sidebar */}
-        <aside className="w-full lg:w-72 shrink-0 space-y-6">
+        <aside className="hidden lg:block w-72 shrink-0 space-y-6">
           {/* Seeker Profile Mini Card */}
           <div className="bg-white dark:bg-[#071A17] rounded-3xl border border-[#DDE8E1] dark:border-white/10 p-6 shadow-sm text-center space-y-4">
             <div className="relative inline-block mx-auto">

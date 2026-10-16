@@ -3,6 +3,8 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   BookOpen,
+  Bookmark,
+  Receipt,
   Search,
   User,
   LogOut,
@@ -335,6 +337,22 @@ export const Navbar: React.FC = () => {
                   >
                     <BookOpen className="w-4 h-4 text-[#077432]" />
                     <span>My Sacred Library</span>
+                  </Link>
+                  <Link
+                    to="/dashboard?tab=bookmarks"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="px-3 py-2 text-sm font-sans text-stone-700 dark:text-stone-200 flex items-center gap-2 hover:bg-stone-50 dark:hover:bg-white/5 rounded-lg"
+                  >
+                    <Bookmark className="w-4 h-4 text-[#077432]" />
+                    <span>Bookmarks &amp; Notes</span>
+                  </Link>
+                  <Link
+                    to="/dashboard?tab=orders"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="px-3 py-2 text-sm font-sans text-stone-700 dark:text-stone-200 flex items-center gap-2 hover:bg-stone-50 dark:hover:bg-white/5 rounded-lg"
+                  >
+                    <Receipt className="w-4 h-4 text-[#077432]" />
+                    <span>Order Invoices</span>
                   </Link>
                   <Link
                     to="/dashboard?tab=settings"
