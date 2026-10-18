@@ -1,5 +1,8 @@
-export const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || '/api').replace(/\/$/, '');
-const productionMediaOrigin = 'https://living-in-the-light-of-allah-backend.onrender.com';
+const productionApiOrigin = 'https://living-in-the-light-of-allah-backend.onrender.com';
+export const apiBaseUrl = (
+  import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? `${productionApiOrigin}/api` : '/api')
+).replace(/\/$/, '');
+const productionMediaOrigin = productionApiOrigin;
 const mediaOrigin = (
   import.meta.env.VITE_MEDIA_BASE_URL ||
   (apiBaseUrl.startsWith('https://') || apiBaseUrl.startsWith('http://')
