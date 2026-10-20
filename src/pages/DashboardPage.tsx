@@ -613,6 +613,8 @@ export const DashboardPage: React.FC = () => {
                             src={book?.coverImage}
                             alt={book?.title}
                             className="w-14 h-20 object-cover rounded-lg shadow-sm shrink-0"
+                            loading="lazy"
+                            decoding="async"
                           />
                           <div className="min-w-0 flex-1 space-y-1">
                             <h4 className="font-serif font-bold text-xs text-[#202522] dark:text-white truncate">
@@ -700,6 +702,8 @@ export const DashboardPage: React.FC = () => {
                             src={book.coverImage}
                             alt={book.title}
                             className="w-20 aspect-[3/4] object-cover rounded-xl shadow-book book-spine-shadow shrink-0"
+                            loading="lazy"
+                            decoding="async"
                           />
                           <div className="space-y-1 min-w-0">
                             <span className="text-[10px] font-sans font-bold text-[#077432] dark:text-[#34D399] uppercase tracking-wider block">

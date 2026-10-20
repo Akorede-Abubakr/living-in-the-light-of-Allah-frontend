@@ -75,7 +75,6 @@ export const Navbar: React.FC = () => {
   const navLinks = [
     { name: 'Home', path: homePath },
     { name: 'Bookstore', path: '/books' },
-    { name: 'Speech to Text', path: '/transcribe' },
     { name: 'LightBridge AI', path: '/chat' },
     { name: 'Journal', path: '/blog' },
     { name: 'About', path: '/about' },

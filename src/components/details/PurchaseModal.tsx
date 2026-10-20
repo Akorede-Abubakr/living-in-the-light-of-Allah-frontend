@@ -131,6 +131,8 @@ export const PurchaseModal: React.FC<PurchaseModalProps> = ({
               src={book.coverImage}
               alt={book.title}
               className="w-16 aspect-[3/4] object-cover rounded shadow-sm shrink-0"
+              loading="lazy"
+              decoding="async"
             />
             <div className="flex flex-col justify-center">
               <h4 className="font-serif font-bold text-sm sm:text-base text-[#202522] dark:text-white line-clamp-1">

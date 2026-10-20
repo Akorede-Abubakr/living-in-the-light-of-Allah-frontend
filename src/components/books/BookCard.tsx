@@ -23,6 +23,7 @@ export const BookCard: React.FC<BookCardProps> = ({ book, variant = 'standard', 
           alt={book.title}
           className="w-full h-full object-contain object-center p-5 group-hover:scale-105 transition-transform duration-500"
           loading="lazy"
+          decoding="async"
         />
 
         {book.isFeatured && (

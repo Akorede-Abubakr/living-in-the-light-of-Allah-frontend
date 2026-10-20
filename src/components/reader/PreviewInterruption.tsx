@@ -69,6 +69,8 @@ export const PreviewInterruption: React.FC<PreviewInterruptionProps> = ({
             src={coverImage}
             alt={bookTitle}
             className="w-14 aspect-[2/3] object-cover rounded shadow-sm shrink-0"
+            loading="lazy"
+            decoding="async"
           />
           <div className="min-w-0 flex-1">
             <h4 className="font-serif font-bold text-sm truncate">{bookTitle}</h4>

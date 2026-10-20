@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Shield, HeartHandshake, Feather, Compass, Sparkles, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Shield, HeartHandshake, Feather, Compass, ArrowRight } from 'lucide-react';
 import { SEO } from '../components/common/SEO';
 import { Button } from '../components/common/Button';
 
 export const AboutPage: React.FC = () => {
+  const [showFullAuthor, setShowFullAuthor] = useState(false);
+
   return (
     <div className="flex-1 flex flex-col bg-white dark:bg-[#071A17] text-[#202522] dark:text-[#F8F5ED] transition-colors duration-200 animate-fadeIn">
       <SEO
@@ -53,6 +55,8 @@ export const AboutPage: React.FC = () => {
                 src="/images/hero-bg.jpg"
                 alt="Sacred Architecture"
                 className="w-full h-[380px] object-cover group-hover:scale-105 transition-transform duration-700"
+                loading="lazy"
+                decoding="async"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex items-end p-6">
                 <p className="text-xs font-mono text-white/90">
@@ -128,68 +132,62 @@ export const AboutPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Advisory & Curation Fellowship */}
-      <section className="py-16 sm:py-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        <div className="text-center max-w-xl mx-auto space-y-2">
-          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#202522] dark:text-white">
-            Editorial Direction
-          </h2>
-          <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-400">
-            Guided by scholars, translators, and educators dedicated to classical clarity.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          <div className="p-5 bg-white dark:bg-[#071A17] rounded-2xl border border-[#DDE8E1] dark:border-white/10 text-center space-y-3 shadow-sm">
-            <img
-              src="/images/scholar-1.jpg"
-              alt="Shaykh Tariq Al-Mansoor"
-              className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-[#077432]/30 shadow-md"
-            />
-            <div>
-              <h4 className="font-serif font-bold text-base text-[#202522] dark:text-white">
-                Shaykh Tariq Al-Mansoor
-              </h4>
-              <p className="text-xs text-[#077432] dark:text-[#34D399] font-mono">Classical Islamic Thought</p>
-            </div>
-            <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed font-sans">
-              Specialist in classical jurisprudential texts and traditional metaphysical philosophy.
-            </p>
+      {/* About the Author */}
+      <section className="py-16 sm:py-20 bg-stone-50/70 dark:bg-[#051814] border-y border-[#DDE8E1] dark:border-white/10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+          <div className="text-center space-y-2">
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#202522] dark:text-white">
+              About the Author
+            </h2>
           </div>
 
-          <div className="p-5 bg-white dark:bg-[#071A17] rounded-2xl border border-[#DDE8E1] dark:border-white/10 text-center space-y-3 shadow-sm">
-            <img
-              src="/images/scholar-2.jpg"
-              alt="Dr. Hamza Yusufi"
-              className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-[#077432]/30 shadow-md"
-            />
-            <div>
-              <h4 className="font-serif font-bold text-base text-[#202522] dark:text-white">
-                Dr. Hamza Yusufi
-              </h4>
-              <p className="text-xs text-[#077432] dark:text-[#34D399] font-mono">Philosophy & Ethics</p>
+          <article className={`relative w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 p-6 pb-16 sm:p-8 sm:pb-16 bg-white dark:bg-[#071A17] rounded-3xl border border-[#DDE8E1] dark:border-white/10 shadow-sm transition-[max-height] duration-300 ${showFullAuthor ? 'max-h-[2000px]' : 'max-h-[420px] overflow-hidden'}`}>
+            <div className="lg:col-span-4 flex items-start justify-center">
+              <img
+                src="/images/waliyat-sulaimon-bolanle.jpg"
+                alt="Waliyat Sulaimon Bolanle"
+                className="h-52 w-52 sm:h-56 sm:w-56 rounded-full object-cover border-4 border-[#077432]/20 shadow-md"
+                loading="lazy"
+                decoding="async"
+              />
             </div>
-            <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed font-sans">
-              Researcher in comparative intellectual history, modern epistemology, and bioethics.
-            </p>
-          </div>
+            <div className="lg:col-span-8 space-y-6">
+              <div className="space-y-3">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#077432] dark:text-[#34D399]">About</p>
+                <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#202522] dark:text-white">Waliyat Sulaimon Bolanle</h3>
+                <p className="text-sm sm:text-base text-stone-600 dark:text-stone-300 leading-relaxed">
+                  Greetings, I'm Waliyat—an accomplished entrepreneur and seasoned Human Resources administrator. Leveraging extensive experience in administration, I specialize in delivering professional services:
+                </p>
+              </div>
 
-          <div className="p-5 bg-white dark:bg-[#071A17] rounded-2xl border border-[#DDE8E1] dark:border-white/10 text-center space-y-3 shadow-sm">
-            <img
-              src="/images/scholar-3.jpg"
-              alt="Ustadha Fatima Zahra"
-              className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-[#077432]/30 shadow-md"
-            />
-            <div>
-              <h4 className="font-serif font-bold text-base text-[#202522] dark:text-white">
-                Ustadha Fatima Zahra
-              </h4>
-              <p className="text-xs text-[#077432] dark:text-[#34D399] font-mono">Spiritual Development</p>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 text-sm text-stone-700 dark:text-stone-300 leading-relaxed">
+                <li><strong className="text-[#202522] dark:text-white">Professional Writing:</strong> Crafting compelling content tailored to your specific needs.</li>
+                <li><strong className="text-[#202522] dark:text-white">Translation Services:</strong> Proficient in translating both audio and video content.</li>
+                <li><strong className="text-[#202522] dark:text-white">Accurate Transcription:</strong> Transforming spoken words into precise written text.</li>
+                <li><strong className="text-[#202522] dark:text-white">Virtual Assistance:</strong> Providing reliable virtual support for various tasks.</li>
+                <li><strong className="text-[#202522] dark:text-white">Email Copy Management:</strong> Expertly handling and composing effective email communications.</li>
+                <li><strong className="text-[#202522] dark:text-white">Strategic Content Creation:</strong> Generating engaging and relevant content across diverse topics.</li>
+                <li><strong className="text-[#202522] dark:text-white">Efficient Data Scraping:</strong> Extracting valuable insights through streamlined data scraping.</li>
+                <li><strong className="text-[#202522] dark:text-white">Precise Data Entry:</strong> Ensuring accuracy and efficiency in handling data.</li>
+                <li><strong className="text-[#202522] dark:text-white">Focused Web Scraping:</strong> Extracting targeted information from websites.</li>
+              </ul>
+
+              <p className="text-sm sm:text-base text-stone-600 dark:text-stone-300 leading-relaxed border-t border-[#DDE8E1] dark:border-white/10 pt-5">
+                Dedication and expertise define my approach to every project, guaranteeing top-notch results. Let's collaborate to elevate your business to new heights!
+              </p>
             </div>
-            <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed font-sans">
-              Educator focusing on moral purification (Tazkiyah) and spiritual equilibrium in daily life.
-            </p>
-          </div>
+            {!showFullAuthor && <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-white dark:from-[#071A17] to-transparent pointer-events-none" />}
+            <div className="absolute bottom-5 right-6 sm:right-8 z-10 text-right">
+              <button
+                type="button"
+                aria-expanded={showFullAuthor}
+                onClick={() => setShowFullAuthor(value => !value)}
+                className="text-sm font-semibold text-[#077432] dark:text-[#A3DAB7] underline underline-offset-4 hover:text-[#065F29] dark:hover:text-white"
+              >
+                {showFullAuthor ? 'Read less' : 'Read more'}
+              </button>
+            </div>
+          </article>
         </div>
       </section>
 

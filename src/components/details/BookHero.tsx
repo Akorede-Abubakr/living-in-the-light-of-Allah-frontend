@@ -26,6 +26,8 @@ export const BookHero: React.FC<BookHeroProps> = ({
               src={book.coverImage}
               alt={book.title}
               className="w-full h-full object-cover"
+              fetchPriority="high"
+              decoding="async"
             />
             {book.isFeatured && (
               <div className="absolute top-3 left-3 z-10">

@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { Suspense, useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { readerApi, progressApi, bookmarksApi } from '../api';
 import { ReaderHeader } from '../components/reader/ReaderHeader';
 import { ReaderFooter } from '../components/reader/ReaderFooter';
@@ -12,13 +12,16 @@ import { PurchaseModal } from '../components/details/PurchaseModal';
 import { SEO } from '../components/common/SEO';
 import { useAuth } from '../context/AuthContext';
 import { BookAssistantPanel } from '../components/reader/BookAssistantPanel';
-import { OriginalDocumentPage } from '../components/reader/OriginalDocumentPage';
 import { Modal } from '../components/common/Modal';
+
+const OriginalDocumentPage = React.lazy(() => import('../components/reader/OriginalDocumentPage').then(module => ({ default: module.OriginalDocumentPage })));
 
 export const ReaderPage: React.FC = () => {
   const { bookId } = useParams<{ bookId: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isAuthenticated, user } = useAuth();
+  const queryClient = useQueryClient();
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
 
   // Page state
   const initialPage = Math.max(1, Number(searchParams.get('page')) || 1);
@@ -72,6 +75,23 @@ export const ReaderPage: React.FC = () => {
   const previewLimit = readerMeta?.previewLimit ?? 0;
   const hasFullAccess = readerMeta?.hasFullAccess || false;
 
+  useEffect(() => {
+    if (readerMeta?.originalPagesAvailable && hasFullAccess) void import('../components/reader/OriginalDocumentPage');
+  }, [readerMeta?.originalPagesAvailable, hasFullAccess]);
+
+  useEffect(() => {
+    if (!bookId || totalPages < 1) return;
+    const lastAllowedPage = hasFullAccess ? totalPages : Math.min(previewLimit, totalPages);
+    const adjacentPages = [currentPage - 1, currentPage + 1]
+      .filter(pageNumber => pageNumber >= 1 && pageNumber <= lastAllowedPage);
+    adjacentPages.forEach(pageNumber => {
+      void queryClient.prefetchQuery({
+        queryKey: ['readerPage', bookId, pageNumber, user?.id, hasFullAccess],
+        queryFn: () => readerApi.getPage(bookId, pageNumber),
+      });
+    });
+  }, [bookId, currentPage, totalPages, previewLimit, hasFullAccess, user?.id, queryClient]);
+
   // 2. Fetch Page Content with Access Control
   const { data: pageData, isLoading: isPageLoading, error: pageError, refetch: refetchPage } = useQuery({
     queryKey: ['readerPage', bookId, currentPage, user?.id, hasFullAccess],
@@ -123,6 +143,28 @@ export const ReaderPage: React.FC = () => {
     },
     [totalPages, setSearchParams, isAuthenticated, hasFullAccess, previewLimit, saveProgressMutation]
   );
+
+  const handleTouchStart = (event: React.TouchEvent<HTMLElement>) => {
+    const target = event.target;
+    if (target instanceof Element && target.closest('button, a, input, textarea, select, [role="dialog"]')) {
+      touchStart.current = null;
+      return;
+    }
+    const touch = event.touches[0];
+    if (touch) touchStart.current = { x: touch.clientX, y: touch.clientY };
+  };
+
+  const handleTouchEnd = (event: React.TouchEvent<HTMLElement>) => {
+    const start = touchStart.current;
+    touchStart.current = null;
+    const touch = event.changedTouches[0];
+    if (!start || !touch) return;
+    const horizontalDistance = touch.clientX - start.x;
+    const verticalDistance = touch.clientY - start.y;
+    if (Math.abs(horizontalDistance) < 55 || Math.abs(horizontalDistance) < Math.abs(verticalDistance) * 1.25) return;
+    if (horizontalDistance < 0 && currentPage < totalPages) handlePageChange(currentPage + 1);
+    else if (horizontalDistance > 0 && currentPage > 1) handlePageChange(currentPage - 1);
+  };
 
   // Keyboard Navigation (Arrow Keys)
   useEffect(() => {
@@ -189,9 +231,9 @@ export const ReaderPage: React.FC = () => {
           <button aria-label="Next page" disabled={currentPage >= totalPages} onClick={() => handlePageChange(currentPage + 1)} className="hidden md:block fixed right-4 top-1/2 z-20 rounded-full bg-white text-stone-900 border border-stone-300 shadow p-3 disabled:opacity-30 disabled:cursor-not-allowed"><ChevronRight /></button>
         </nav>
       )}
-      <main className="flex-1 flex flex-col justify-between px-1 py-2 pb-4 md:px-20 md:py-12 md:pb-24">
+      <main className="flex-1 flex flex-col justify-between px-1 py-2 pb-4 md:px-20 md:py-12 md:pb-24 touch-pan-y" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} onTouchCancel={() => { touchStart.current = null; }}>
         <div className={`mx-auto w-full max-md:!max-w-none ${widthClasses[settings.maxWidth]} transition-all duration-300`}>
-          {isMetaLoading || isPageLoading ? (
+          {isMetaLoading ? (
             <div className="space-y-4 animate-pulse py-12">
               <div className="h-6 bg-stone-300/40 rounded w-1/3 mb-6" />
               <div className="h-4 bg-stone-300/40 rounded w-full" />
@@ -224,6 +266,27 @@ export const ReaderPage: React.FC = () => {
               onReturnToPreview={() => handlePageChange(previewLimit)}
               theme={settings.theme}
             />
+          ) : readerMeta?.originalPagesAvailable && hasFullAccess ? (
+            <article aria-label={`Book page ${currentPage}`}>
+              <Suspense fallback={<div role="status" className="min-h-[60vh] grid place-items-center bg-white text-stone-600">Preparing original book viewer…</div>}>
+                <OriginalDocumentPage
+                  key={`${bookId}-${readerMeta.documentVersion}-${user?.id}`}
+                  bookId={bookId!}
+                  pageNumber={currentPage}
+                  documentVersion={readerMeta.documentVersion}
+                  accessibleText={page?.content}
+                  prefetchNext={currentPage < totalPages}
+                />
+              </Suspense>
+            </article>
+          ) : isPageLoading ? (
+            <div className="space-y-4 animate-pulse py-12">
+              <div className="h-6 bg-stone-300/40 rounded w-1/3 mb-6" />
+              <div className="h-4 bg-stone-300/40 rounded w-full" />
+              <div className="h-4 bg-stone-300/40 rounded w-full" />
+              <div className="h-4 bg-stone-300/40 rounded w-4/5" />
+              <div className="h-4 bg-stone-300/40 rounded w-full pt-4" />
+            </div>
           ) : pageError ? (
             <div role="alert" className="py-12 text-center space-y-3">
               <p>Could not load this page.</p>
@@ -232,15 +295,10 @@ export const ReaderPage: React.FC = () => {
             </div>
           ) : (
             <article aria-label={`Book page ${currentPage}`}>
-              {readerMeta?.originalPagesAvailable ? (
-                <OriginalDocumentPage key={`${bookId}-${currentPage}-${readerMeta.documentVersion}-${user?.id}`} bookId={bookId!} pageNumber={currentPage} accessibleText={page?.content} />
-              ) : (
-                <div role="status" className="p-8 text-center space-y-3">
-                  <h1 className="text-xl font-serif">Original edition awaiting upload</h1>
-                  <p>The publisher needs to upload a PDF edition to display the original page layout.</p>
-                  <p>Existing purchases remain valid.</p>
-                </div>
-              )}
+              <div className="min-h-[65vh] bg-white text-stone-800 p-7 sm:p-10 md:p-14 border border-stone-200 shadow-lg">
+                {page?.title && <h1 className="font-serif text-2xl font-semibold mb-6">{page.title}</h1>}
+                <p className="whitespace-pre-wrap break-words leading-8 text-base sm:text-lg">{page?.content || 'This page has no readable text.'}</p>
+              </div>
             </article>
           )}
         </div>

@@ -9,7 +9,7 @@ import { MAX_AUDIO_BYTES, MAX_RECORDING_SECONDS, SpeechLanguage, Transcription, 
 const languageNames = { yo: 'Yoruba', 'en-NG': 'Nigerian English', ha: 'Hausa', ig: 'Igbo' };
 const clock = (seconds: number) => `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${Math.floor(seconds % 60).toString().padStart(2, '0')}`;
 
-export const TranscribePage: React.FC = () => {
+export const TranscribePage: React.FC<{ embedded?: boolean }> = ({ embedded = false }) => {
   const recording = useAudioRecorder();
   const [language, setLanguage] = useState<SpeechLanguage>('yo');
   const [result, setResult] = useState<Transcription | null>(null);
@@ -62,16 +62,16 @@ export const TranscribePage: React.FC = () => {
   }
 
   return (
-    <div className="flex-1 bg-[#F8FAF9] dark:bg-[#071A17] px-4 sm:px-6 py-10 sm:py-16">
-      <SEO title="Speech to Text" description="Turn your English, Yoruba, Hausa and Igbo recordings into text with N-ATLaS speech recognition." />
+    <div className={embedded ? '' : 'flex-1 bg-[#F8FAF9] dark:bg-[#071A17] px-4 sm:px-6 py-10 sm:py-16'}>
+      {!embedded && <SEO title="Speech to Text" description="Turn your English, Yoruba, Hausa and Igbo recordings into text with N-ATLaS speech recognition." />}
       <div className="max-w-5xl mx-auto">
-        <div className="max-w-2xl mb-9">
+        {!embedded && <div className="max-w-2xl mb-9">
           <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#077432] dark:text-[#A3DAB7]">
             <Waves size={18} aria-hidden="true" /> Your voice, in writing
           </span>
           <h1 className="font-serif text-3xl sm:text-5xl text-[#202522] dark:text-[#F8F5ED] mt-4 mb-4">Speech to Text</h1>
           <p className="text-sm sm:text-base text-stone-600 dark:text-stone-300 leading-relaxed">Speak in English, Yoruba, Hausa or Igbo. Preview your recording, then turn it into text you can copy and use.</p>
-        </div>
+        </div>}
 
         <div className="grid lg:grid-cols-2 gap-6 items-start">
           <section aria-label="Audio recording" className="rounded-3xl bg-white dark:bg-[#09221D] border border-[#DDE8E1] dark:border-white/10 p-6 sm:p-8 shadow-soft">
@@ -145,7 +145,7 @@ export const TranscribePage: React.FC = () => {
             </div>}
             {error && <div role="alert" className="rounded-xl p-4 bg-rose-50 text-rose-800 dark:bg-rose-950/30 dark:text-rose-200 text-sm leading-relaxed">
               <p>{error}</p>
-              {signIn && <Link to="/login?redirect=%2Ftranscribe" className="inline-block font-semibold underline mt-3">Sign in again</Link>}
+              {signIn && <Link to="/login?redirect=%2Fchat%3Fmode%3Dtranscribe" className="inline-block font-semibold underline mt-3">Sign in again</Link>}
               {!signIn && recording.audio && <button onClick={() => void transcribe()} className="font-semibold underline mt-3">Retry with this recording</button>}
             </div>}
           </section>

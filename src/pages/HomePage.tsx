@@ -105,6 +105,8 @@ export const HomePage: React.FC = () => {
                   src="/images/editors-choice.png"
                   alt="Living in the light of Allah"
                   className="w-full h-auto object-cover block group-hover:scale-102 transition-transform duration-500"
+                  fetchPriority="high"
+                  decoding="async"
                 />
               </div>
             </div>
@@ -386,6 +388,8 @@ export const HomePage: React.FC = () => {
                       }
                       alt={blog.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                      decoding="async"
                     />
                     <span className="absolute top-3 left-3 px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-md text-white text-[10px] font-semibold uppercase tracking-wider">
                       {blog.category}

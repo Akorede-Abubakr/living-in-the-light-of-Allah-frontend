@@ -179,6 +179,8 @@ export const BlogPostPage: React.FC = () => {
               src={blog.coverImage}
               alt={blog.title}
               className="w-full h-full object-cover"
+              fetchPriority="high"
+              decoding="async"
             />
           </div>
         </div>
@@ -313,6 +315,8 @@ export const BlogPostPage: React.FC = () => {
                     }
                     alt={item.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
                 <div className="p-5 flex-1 flex flex-col justify-between space-y-3">

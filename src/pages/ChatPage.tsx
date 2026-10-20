@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowUp, Loader2, MessageCircle, Mic, Plus, RotateCcw, Square } from 'lucide-react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { ArrowUp, Loader2, MessageCircle, Mic, Plus, RotateCcw, Square, Waves } from 'lucide-react';
 import { SEO } from '../components/common/SEO';
 import { useAuth } from '../context/AuthContext';
 import { ChatLanguage, ChatMessage, chatError, sendChat } from '../api/chat.api';
 import { MAX_AUDIO_BYTES, SpeechLanguage, transcribeAudio, transcriptionError } from '../api/ai.api';
 import { useAudioRecorder } from '../hooks/useAudioRecorder';
+import { TranscribePage } from './TranscribePage';
 
 const languages: { code: ChatLanguage; label: string }[] = [
   { code: 'en', label: 'English' }, { code: 'yo', label: 'Yoruba · Yorùbá' },
@@ -18,6 +19,8 @@ export const ChatPage: React.FC = () => {
 };
 
 const ChatSession: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeMode = searchParams.get('mode') === 'transcribe' ? 'transcribe' : 'chat';
   const recorder = useAudioRecorder();
   const [language, setLanguage] = useState<ChatLanguage>('en');
   const [speechLanguage, setSpeechLanguage] = useState<SpeechLanguage>('en-NG');
@@ -33,6 +36,14 @@ const ChatSession: React.FC = () => {
   const input = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => () => { controller.current?.abort(); speechController.current?.abort(); }, []);
+  useEffect(() => {
+    if (activeMode === 'transcribe') {
+      recorder.reset();
+      speechController.current?.abort();
+      speechController.current = null;
+      setVoicePending(false);
+    }
+  }, [activeMode, recorder.reset]);
   useEffect(() => {
     if (conversation.current) conversation.current.scrollTop = conversation.current.scrollHeight;
   }, [messages, pending]);
@@ -106,9 +117,14 @@ const ChatSession: React.FC = () => {
     <header className="flex flex-wrap items-start justify-between gap-4 mb-7">
       <div><p className="text-xs uppercase tracking-[.2em] text-[#617259] dark:text-[#A3DAB7] mb-2">A space for curiosity</p>
         <h1 className="font-serif text-3xl sm:text-4xl">LightBridge AI</h1>
-        <p className="mt-2 text-sm text-stone-600 dark:text-stone-400">Ask, explore and learn in your language.</p></div>
-      <button type="button" onClick={reset} className="flex items-center gap-2 border border-stone-300 dark:border-white/20 rounded-full px-4 py-2 text-sm hover:bg-stone-100 dark:hover:bg-white/10"><Plus size={16} />New chat</button>
+        <p className="mt-2 text-sm text-stone-600 dark:text-stone-400">{activeMode === 'chat' ? 'Ask, explore and learn in your language.' : 'Turn recordings into text in English, Yoruba, Hausa or Igbo.'}</p></div>
+      {activeMode === 'chat' && <button type="button" onClick={reset} className="flex items-center gap-2 border border-stone-300 dark:border-white/20 rounded-full px-4 py-2 text-sm hover:bg-stone-100 dark:hover:bg-white/10"><Plus size={16} />New chat</button>}
     </header>
+    <nav aria-label="LightBridge AI tools" className="flex gap-2 mb-5">
+      <button type="button" aria-current={activeMode === 'chat' ? 'page' : undefined} onClick={() => setSearchParams({})} className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold ${activeMode === 'chat' ? 'bg-[#153F35] text-white dark:bg-[#A3DAB7] dark:text-[#071A17]' : 'border border-stone-300 dark:border-white/20'}`}><MessageCircle size={16} />Chat</button>
+      <button type="button" aria-current={activeMode === 'transcribe' ? 'page' : undefined} onClick={() => setSearchParams({ mode: 'transcribe' })} className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold ${activeMode === 'transcribe' ? 'bg-[#153F35] text-white dark:bg-[#A3DAB7] dark:text-[#071A17]' : 'border border-stone-300 dark:border-white/20'}`}><Waves size={16} />Speech to Text</button>
+    </nav>
+    {activeMode === 'transcribe' ? <TranscribePage embedded /> : <>
     <div className="border border-[#E4E7DF] dark:border-white/10 rounded-3xl overflow-hidden bg-[#FBFAF6] dark:bg-[#0B231E] shadow-sm">
       <div className="flex flex-wrap gap-3 items-center justify-between px-5 py-4 border-b border-[#E4E7DF] dark:border-white/10">
         <span className="flex items-center gap-2 text-sm font-medium"><MessageCircle size={18} className="text-[#617259] dark:text-[#A3DAB7]" />Your conversation</span>
@@ -158,5 +174,6 @@ const ChatSession: React.FC = () => {
       </form>
     </div>
     <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed mt-4">Powered by NCAIR1/N-ATLaS. AI can make mistakes; verify important answers. Recent conversation context is sent with each message (up to 10 previous exchanges). This chat is kept only on this page and clears when you leave or refresh.</p>
+    </>}
   </section>;
 };

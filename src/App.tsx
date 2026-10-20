@@ -20,7 +20,6 @@ import { MockPayPage } from './pages/MockPayPage';
 import { CheckoutSuccessPage } from './pages/CheckoutSuccessPage';
 import { BlogListPage } from './pages/BlogListPage';
 import { BlogPostPage } from './pages/BlogPostPage';
-import { TranscribePage } from './pages/TranscribePage';
 import { ChatPage } from './pages/ChatPage';
 
 const queryClient = new QueryClient({
@@ -86,7 +85,7 @@ const AppLayout: React.FC = () => {
           <Route path="/blog" element={<BlogListPage />} />
           <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/read/:bookId" element={<ReaderPage />} />
-          <Route path="/transcribe" element={<ProtectedRoute><TranscribePage /></ProtectedRoute>} />
+          <Route path="/transcribe" element={<Navigate to="/chat?mode=transcribe" replace />} />
           <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
           <Route
             path="/dashboard"

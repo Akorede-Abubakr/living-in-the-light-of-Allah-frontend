@@ -24,7 +24,7 @@ async function signIn(page: Page, request: APIRequestContext) {
     } });
   });
   await page.goto('/transcribe', { waitUntil: 'domcontentloaded' });
-  await expect(page.getByRole('heading', { name: 'Speech to Text', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Speech to Text', exact: true })).toHaveAttribute('aria-current', 'page');
 }
 
 function wav() {
@@ -44,8 +44,8 @@ async function chooseAudio(page: Page) {
 
 test('protects the route and keeps a visible navigation link', async ({ page }) => {
   await page.goto('/transcribe', { waitUntil: 'domcontentloaded' });
-  await expect(page).toHaveURL(/\/login\?redirect=%2Ftranscribe/);
-  await expect(page.getByRole('link', { name: 'Speech to Text', exact: true })).toBeVisible();
+  await expect(page).toHaveURL(/\/login\?redirect=%2Fchat%3Fmode%3Dtranscribe/);
+  await expect(page.getByRole('link', { name: 'LightBridge AI', exact: true })).toBeVisible();
 });
 
 test('browser recording → Express → existing FastAPI factory → transcript and copy', async ({ page, request }) => {
@@ -154,5 +154,5 @@ test('handles expired authentication, invalid files and mobile layout', async ({
   await page.route('**/api/ai/transcribe', route => route.fulfill({ status: 401, json: { message: 'Expired' } }));
   await page.getByRole('button', { name: 'Transcribe audio', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('Your session has expired');
-  await expect(page.getByRole('link', { name: 'Sign in again', exact: true })).toHaveAttribute('href', '/login?redirect=%2Ftranscribe');
+  await expect(page.getByRole('link', { name: 'Sign in again', exact: true })).toHaveAttribute('href', '/login?redirect=%2Fchat%3Fmode%3Dtranscribe');
 });
